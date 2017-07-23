@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="noonworks">
+<title>Nunze Options</title>
+<style>
+body { font-size: 1em; }
+header { margin: 1em 0 2em 0; border-bottom: 1px solid #888; }
+header h1 { margin: 0; }
+footer { margin: 2em 0 0 0; padding: 0.5em; border-top: 1px solid #888; }
+footer p { margin: 0.1em 0; line-height: 1.25em; }
+section { margin-top: 2em; }
+section h1 { margin: 0; }
+section h2 { margin-bottom: 0.25em; font-size: 1.25em; }
+section div.description {
+  margin: 0.5em 0 0.5em 1em;
+  padding: 0.5em 0.75em;
+  font-size: 0.9em;
+  border-radius: 4px;
+  background-color: rgb(245, 245, 245);
+  border: 1px solid #cecece;
+}
+div.description h4 {
+  margin: 0;
+}
+section div.options { margin: 1em 0 0.5em 1em; }
+button#save { margin-top: 3em; }
+p, ul, ol { margin: 0; }
+code {
+  margin: 0 2px;
+  padding: 2px;
+  border-radius: 4px;
+  border: 1px solid #cecece;
+  font-family: monospace;
+}
+input[type=text] { width: 10em; }
+input[type=url] { width: 30em;}
+input[type=number] { width: 5em; }
+#sec_search .options ul { margin: 0; padding: 0; }
+#sec_search .options ul li { list-style-type: none; }
+p.sitenumber {
+  margin: 0;
+  padding-top: 2em;
+  float: right;
+  text-align: center;
+  font-weight: bold;
+  color: #888;
+}
+fieldset {
+  margin-bottom: 1em;
+  border: 1px solid #888;
+  border-radius: 4px;
+  clear: both;
+  background-color: #ffffff;
+}
+fieldset > p { margin: 0.5em 0; }
+fieldset.subgroup { margin: 0; padding: 0; border: none; }
+fieldset.error { background-color: #ffcece; }
+label.error { color: #c10101; font-weight: bold; }
+fieldset.disabled { background-color: #ebebe4; }
+fieldset.disabled > label, fieldset:disabled * { color: #888; }
+fieldset > label {
+  display: inline-block;
+  min-width: 2.5em;
+  text-align: right;
+  margin-right: 0.5em;
+}
+fieldset.searchsite > input { margin-bottom: 0.5em; }
+fieldset.searchsite > button { margin-right: 0.5em; }
+.search-sites-move { transition: transform .2s; }
+.search-sites-enter-active { transition: all .3s; }
+.search-sites-enter { opacity: 0; transform: scaleX(0) translateX(50%); }
+.search-sites-leave-active { transition: all .2s; }
+.search-sites-leave-to { opacity: 0; transform: scaleX(0) translateX(50%); }
+iframe { width: 0; height: 0; margin: 0; padding: 0; display: none; }
+.spinner {
+  width: 0.5em;
+  height: 0.5em;
+  display: inline-block;
+  margin-right: 0.3em;
+  border-radius: 50%;
+  border-top: 3px solid rgba(150, 150, 150, 1);
+  border-left: 3px solid rgba(150, 150, 150, 0.8);
+  border-bottom: 3px solid rgba(150, 150, 150, 0.5);
+  border-right: 3px solid rgba(150, 150, 150, 0.2);
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#loader {
+  position: fixed;
+  top: 1em;
+  right: 2em;
+  padding: 0.5em 1.5em;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  opacity: 1;
+}
+#loader.hide {
+  opacity: 0;
+  animation: hide 1.5s linear 0s;
+}
+@keyframes hide{
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+#loader-save { display: none; }
+#load-error {
+  display: none;
+  margin: 1em 0;
+  padding: 1em;
+  background-color: #ffcece;
+  border-radius: 4px;
+  border: 1px solid #c10101;
+}
+#load-error p {
+  margin: 0;
+  color: #c10101;
+  font-weight: bold;
+}
+</style>
+<script src="js/lodash.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/options.js"></script>
+</head>
+<body>
+<header>
+<h1>Nunze Options</h1>
+</header>
+
+<div id="loader" class="hide"><div class="spinner"></div>
+<span id="loader-load">読み込み中...</span><span id="loader-save">保存中...</span></div>
+
+
+<button id="resetoptions" disabled="disabled">設定を初期化する</button>
+<div id="load-error">
+<p>設定を正常に読み込めませんでした。設定データが破損している可能性があります。</p>
+<p>[設定を初期化する]ボタンを押して、設定データを初期化してください。</p>
+</div>
+
+
+<div id="options"><template>
+
+
+<section id="sec_search">
+<h1>検索サイト</h1>
+<div class="description">
+  <p>右クリックメニューに表示される検索サイトを管理できます。</p>
+  <ul>
+    <li>「使用する」チェックがついている検索サイトのみ、メニューに表示されます。</li>
+    <li>「名前」には、メニューで表示される名前を指定します。</li>
+    <li>「URL」には、検索時のURLを指定します。<code>&lt;WORD&gt;</code>に<code>encodeURIComponent</code>でエンコードされた検索対象単語が入ります。</li>
+    <li>入力内容にエラーがある検索サイトは、メニューに表示されません。</li>
+  </ul>
+</div>
+<div class="options">
+  <transition-group name="search-sites" tag="ul">
+  <li v-for="(site, index) in data.search.sites" :key="site">
+  <fieldset :class="{ searchsite: true, disabled: !site.use, error: (site.use && !validSite[index]) }">
+    <legend>
+      <input type="checkbox" :id="'s_use_' + index" v-model="site.use">
+      <label :for="'s_use_' + index">使用する</label>
+    </legend>
+    <p class="sitenumber">{{ index + 1 }}</p>
+    <label :for="'s_name_' + index" :class="{ error: (site.use && !validSiteName[index]) }">名前</label>
+    <input type="text" :id="'s_name_' + index" :disabled="!site.use" v-model="site.name">
+    <br>
+    <label :for="'s_url_' + index" :class="{ error: (site.use && !validSiteUrl[index]) }">URL</label>
+    <input type="url" :id="'s_url_' + index" :disabled="!site.use" v-model="site.url">
+    <br>
+    <button @click="upSearchSite(index)" :disabled="(index == 0)">▲ 上へ移動 ▲</button>
+    <button @click="downSearchSite(index)" :disabled="(index == data.search.sites.length - 1)">▼ 下へ移動 ▼</button>
+    <button @click="removeSearchSite(index)">× 削除 ×</button>
+  </fieldset>
+  </li>
+  </transition-group>
+  <button @click="addSearchSite()">検索サイトを追加</button>
+</div>
+</section><!-- id="sec_search" -->
+
+
+<section id="sec_loadstone">
+<h1>LoadStone読み取り</h1>
+<div class="options">
+  <input type="checkbox" id="useLoadStone" v-model="data.loadstone.use">
+  <label for="useLoadStone">LoadStoneから情報を読み取る</label>
+  <div class="description">
+    <p>表示中のLoadStoneページから情報を読み取ります。</p>
+    <ul>
+      <li>情報を読み取るには<a href="http://jp.finalfantasyxiv.com/lodestone/" target="blank">LoadStone</a>
+      にログインする必要があります。</li>
+      <li>ログインID、パスワードおよびワンタイムパスワードは読み取りません。</li>
+      <li>読み取った情報はこのブラウザに保存されます。別のアプリおよびサーバーへの保存・送信は行われません。</li>
+    </ul>
+  </div>
+  <div class="description">
+    <p>LoadStoneからの情報読み取りを有効にすると、以下の機能が使用できます。</p>
+    <ul>
+      <li>リテイナーの所持品からのアイテム検索</li>
+    </ul>
+  </div>
+  <div class="description">
+    <p>読み取る情報は以下の通りです。</p>
+    <ul>
+      <li>キャラクター名、ワールド名、キャラクターID（複数のキャラクターを識別して表示するために使用します）</li>
+      <li>リテイナー名、リテイナーID（複数のリテイナーを識別して表示するために使用します）</li>
+      <li>リテイナーの所持品一覧（リテイナーの所持品からアイテム検索を行うために使用します）</li>
+    </ul>
+  </div>
+  <div class="description">
+    <p>機能の使用を止めるときなどには、以下のボタンでデータを削除できます。</p>
+    <button onclick="deleteLoadstoneData()">LoadStoneから読み取った情報を削除する</button>
+  </div>
+  <div class="description">
+    <h4>読み取り方法</h4>
+    <ol>
+      <li><a href="http://jp.finalfantasyxiv.com/lodestone/" target="blank">LoadStone</a>にログインします。</li>
+      <li><a href="http://jp.finalfantasyxiv.com/lodestone/my/">マイページ</a>などの右上にある、キャラクター情報ボックスの右下の「﹀」をクリックします。<br />
+      <img src="img/charabox1.png" alt=""></li>
+      <li><strong>[Nunze]</strong>とついたメニューが追加されています。<br />
+      <img src="img/charabox2.png" alt=""><br /></li>
+      <li>追加されるメニューは以下の通りです。<ul>
+          <li>読み取り可能なデータのページへの移動</li>
+          <li>読み取り（読み取り可能なデータのページでのみ表示）</li>
+        </ul></li>
+      <li>メニューをクリックし、画面の指示に従って読み取りを行います。</li>
+    </ul>
+  </div>
+  <fieldset class="subgroup" :disabled="!data.loadstone.use">
+    <h2>リテイナー所持品検索の条件<span>（LoadStone読み取り有効時のみ）</span></h2>
+    <p>読み取りから<input type="number" v-model.number="data.loadstone.expireDate" />日以上経過したデータは検索に利用しない</p>
+    <input type="checkbox" id="searchpart" v-model="data.loadstone.part">
+    <label for="searchpart">部分一致検索を有効にする</label>
+    <div class="description">
+      <p>アイテム名の部分一致での検索を有効にします。</p>
+      <p>（例：「小麦」で検索した際に、「小麦粉」「ハイランド小麦」等の候補も表示される。）</p>
+    </div>
+    <fieldset class="subgroup" :disabled="!data.loadstone.part">
+      <input type="checkbox" id="searchStrictAndPart" v-model="data.loadstone.strictAndPart">
+      <label for="searchStrictAndPart">完全一致が見つかっても、部分一致も表示する（部分一致検索有効時のみ）</label>
+      <div class="description">
+        <p>チェックを入れないと、完全一致アイテムが見つかった時点で検索を中止します。</p>
+        <p>（例：「小麦」が見つかった場合、「小麦粉」「ハイランド小麦」等は候補に表示されない。）</p>
+      </div>
+      <div class="description">
+        <p>チェックを入れると、完全一致アイテムが見つかった場合でも、部分一致検索を実行します。</p>
+        <p>（例：「小麦」が見つかった場合でも、「小麦粉」「ハイランド小麦」等も候補に表示される。）</p>
+      </div>
+    </fieldset>
+    <input type="checkbox" id="searchFuzzy" v-model="data.loadstone.fuzzy">
+    <label for="searchFuzzy">あいまい検索を有効にする</label>
+    <div class="description">
+      <p>一部の文字の全角／半角の違い等を無視して検索します。</p>
+    </div>
+    <fieldset class="subgroup" :disabled="!data.loadstone.fuzzy">
+      <input type="checkbox" id="searchStrictAndFuzzy" v-model="data.loadstone.strictAndFuzzy">
+      <label for="searchStrictAndFuzzy">完全一致が見つかっても、あいまい検索結果も表示する（あいまい検索有効時のみ）</label>
+      <div class="description">
+        <p>チェックを入れないと、完全一致アイテムが見つかった時点で検索を中止します。</p>
+        <p>チェックを入れると、完全一致アイテムが見つかった場合でも、あいまい検索を実行します。</p>
+      </div>
+    </fieldset>
+  </fieldset>
+</div>
+</section><!-- id="sec_loadstone" -->
+
+
+<section id="sec_stack" style="display: none;">
+<h1>レシピスタック</h1>
+<div class="description">
+  <p>レシピページのアイテムをスタックする機能です。</p>
+</div>
+<div class="options">
+  <input type="checkbox" id="useRecipeStack" v-model="data.recipestack.use">
+  <label for="useRecipeStack">レシピスタック機能を使用する</label>
+</div>
+</section><!-- id="sec_loadstone" -->
+
+
+<section id="sec_detect" style="display: none;">
+<h1>検索履歴ポップアップ機能</h1>
+<div class="description">
+  <p>ページ内の単語にマウスオーバーした際に、検索履歴から情報を表示する機能です。</p>
+  <ul>
+    <li>マウスオーバーした単語が検索履歴内のアイテムにヒットした場合、情報をポップアップ表示します。</li>
+    <li>検索履歴には、以下のサイトで検索してヒットした結果が保存されます。
+      <ul>
+        <li>公式DB</li>
+        <li>ERIONES</li>
+      </ul>
+    </li>
+    <li>LoadStone読み取りが有効な場合は、リテイナー所持品の検索履歴も対象となります。</li>
+  </ul>
+</div>
+<div class="options">
+  <fieldset :class="{ disabled: !data.mouseover.use }">
+    <legend>
+      <input type="checkbox" id="useMouseover" v-model="data.mouseover.use">
+      <label for="useMouseover">検索履歴ポップアップ機能を使用する</label>
+    </legend>
+    <label for="mouseoverHistoryMax">アイテム検索履歴保存件数</label>
+    <input type="number" id="mouseoverHistoryMax" :disabled="!data.mouseover.use"
+      v-model.number="data.mouseover.historyMax"><br />
+    <button :disabled="!data.mouseover.use">アイテム検索履歴を削除する</button>
+  </fieldset>
+</div>
+</section><!-- id="sec_detect" -->
+
+
+<section id="sec_other" style="display: none;">
+<h1>その他の機能</h1>
+<div class="description">
+  <p>※開発中の設定は動作しない場合があります。</p>
+</div>
+<div class="options">
+  <fieldset :class="{ disabled: !data.other.jenlynizer.use }">
+    <legend>
+      <input type="checkbox" id="jenlynizer" v-model="data.other.jenlynizer.use">
+      <label for="jenlynizer">Jenlynizerを使用する</label>
+    </legend>
+    <label for="jenlynizer_name">名前</label>
+    <input type="text" id="jenlynizer_name" :disabled="!data.other.jenlynizer.use" v-model="data.other.jenlynizer.name">
+    <br>
+    <label for="jenlynizer_id">ID</label>
+    <input type="text" id="jenlynizer_id" :disabled="!data.other.jenlynizer.use" v-model="data.other.jenlynizer.id">
+    <br>
+    <label for="jenlynizer_url">アイコン画像URL</label>
+    <input type="url" id="jenlynizer_url" :disabled="!data.other.jenlynizer.use" v-model="data.other.jenlynizer.url">
+  </fieldset>
+</div>
+</section><!-- id="sec_other" -->
+
+
+</template></div><!-- id="options" -->
+
+<iframe id="subwindow" src="./options_sub.html" frameborder="0"></iframe>
+
+<footer>
+<p>You can download source code of this extension from <a href="https://github.com/noonworks/nunze">https://github.com/noonworks/nunze</a>.</p>
+<p><small>2017/06/16 version 0.0.1 &copy; 2017 noonworks</small></p>
+</footer>
+</body>
+</html>

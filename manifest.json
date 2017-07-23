@@ -1,0 +1,57 @@
+{
+  "manifest_version": 2,
+  
+  "name": "Nunze",
+  "version": "0.0.1",
+  "description": "Add some FFXIV tools to context menu.",
+  "author": "@noonworks",
+  
+  "browser_action": {
+    "default_title": "Nunze"
+  },
+  
+  "permissions": [
+    "contextMenus",
+    "clipboardRead",
+    "tabs"
+  ],
+  
+  "background": {
+    "scripts": [
+      "js/bg_storage.js",
+      "js/bg_common.js",
+      "js/bg_options.js",
+      "js/bg_menu.js",
+      "js/bg_loadstone.js"
+    ]
+  },
+  
+  "content_scripts": [
+  {
+    "js": ["js/content_common.js"],
+    "matches": ["http://*/*", "https://*/*", "ftp://*/*"],
+    "run_at": "document_end"
+  },
+  {
+    "js": ["js/content_loadstone.js"],
+    "matches": [
+      "http://jp.finalfantasyxiv.com/lodestone/",
+      "http://jp.finalfantasyxiv.com/lodestone/my/*",
+      "http://jp.finalfantasyxiv.com/lodestone/playguide/*",
+      "http://jp.finalfantasyxiv.com/lodestone/character/*",
+      "http://jp.finalfantasyxiv.com/lodestone/freecompany/*",
+      "http://jp.finalfantasyxiv.com/lodestone/linkshell/*"
+    ],
+    "run_at": "document_end"
+  }
+  ],
+  
+  "options_page": "options.html",
+  "sandbox":{
+    "pages": ["options.html", "pages/retainer_search_result.html"]
+  },
+  "web_accessible_resources": [
+    "options_sub.html",
+    "pages/retainer_search_result.html"
+  ]
+}
