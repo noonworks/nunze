@@ -12,7 +12,7 @@
   
   "permissions": [
     "contextMenus",
-    "clipboardRead",
+    "clipboardWrite",
     "tabs"
   ],
   
