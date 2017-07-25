@@ -12,6 +12,13 @@
       _showSearchInventoryResult(message.result, message.characters, message.url);
       // console.log('[ONMESSAGE Nunze_showInventorySearchResult]', message);
       sendResponse({});
+    } else if (message.method === 'Nunze_copySelection') {
+      if (_selectedWord.length > 0) {
+        _copyText(_selectedWord);
+        sendResponse({ copied: _selectedWord });
+      } else {
+        sendResponse({ copied: null });
+      }
     } else {
       sendResponse({});
     }
@@ -249,5 +256,18 @@
       'method': 'Nunze_updateSearchMenu',
       'name': _selectedWord
     }, function(response){});
+  }
+  
+  //
+  // Common-C. Copy Text
+  //
+  const _copyTextArea = document.createElement('textarea');
+  _copyTextArea.style.cssText = 'position:absolute;top:0;left:-100%';
+  _copyTextArea.setAttribute('tabindex', '-1');
+  document.body.appendChild(_copyTextArea);
+  function _copyText(str) {
+    _copyTextArea.value = str;
+    _copyTextArea.select();
+    document.execCommand('copy');
   }
 })();
