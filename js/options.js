@@ -165,6 +165,7 @@ function createVue(opt) {
       }
     }
   });
+  document.getElementById('deleteloadstonedata').addEventListener('click', deleteLoadstoneData);
 }
 
 Vue.config.errorHandler = function(err, vm, info) {

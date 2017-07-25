@@ -53,5 +53,7 @@
   "web_accessible_resources": [
     "options_sub.html",
     "pages/retainer_search_result.html"
-  ]
+  ],
+  
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"
 }
