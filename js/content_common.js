@@ -78,15 +78,19 @@
   let _debounceHoverWordTimer = null;
   function _debounceHoverWord(e) {
     clearTimeout(_debounceHoverWordTimer);
+    const t_r = _pickupHoveredTextNode(e);
     _debounceHoverWordTimer = setTimeout(function() {
-      _popupWord(e);
+      console.log('textnode', t_r);
+      _popupWord(t_r);
     }, DEBOUNCE_HOVERWORD_TIME);
   }
+  // popup word
   let _pickedText = { text: '', pos: 0 };
   let _detectedWord = '';
-  function _popupWord(e) {
-    if (window.getSelection().toString().length != 0) return _hidePopupWord();
-    const picked = _pickupHoverText(e.clientX, e.clientY);
+  function _popupWord(t_r) {
+    if (!t_r || window.getSelection().toString().length != 0) return _hidePopupWord();
+    const picked = _doPick(t_r.textNode.nodeValue, t_r.range.startOffset, _expectCharaFunc);
+    console.log('[picked]', picked);
     if (picked.text.length == 0) return _hidePopupWord();
     let words = []
     if (picked.text == _pickedText.text && picked.pos == _pickedText.pos) {
@@ -105,6 +109,7 @@
       'method': 'Nunze_searchWordsInHistory',
       'words': words
     }, function(response){
+      if (! response) return;
       const info = response.result; // { word: '', data: {} }
       if (info.word.length == 0) {
         _detectedWord = '';
@@ -134,6 +139,7 @@
   // CJK統合漢字拡張B 0x20000 - 0x2A6DF
   // CJK互換漢字      0xF900 - 0xFADF
   // CJK互換漢字補助  0x2F800 - 0x2FA1F
+  const _EXCEPT_EXP = /[^\t\r\n\/\\\^\$\*\+\?\.\|\[\]\{\}\;\"\'\%\&\=\~\@\`\,\_\!\#。、！？]/;
   const _MARK_EXP = /^[・：･:]*(.*?)[・：･:]*$/;
   const _BAR_ONLY_EXP = /^[-ー]+$/;
   const _ALPHA_NUM_EXP = /^[0-9A-Za-z０-９Ａ-Ｚａ-ｚ]$/;
@@ -144,6 +150,7 @@
   const _KANJI_MARK_EXP = /^[\u4E00-\u9FCF\u3400-\u4DBF\u20000-\u2A6DF\uF900-\uFADF\u2F800-\u2FA1F・：･:]$/;
   const _KANJI_MARK_ALPHANUM_EXP = /^[\u4E00-\u9FCF\u3400-\u4DBF\u20000-\u2A6DF\uF900-\uFADF\u2F800-\u2FA1F・：･:0-9A-Za-z０-９Ａ-Ｚａ-ｚ]$/;
   // pickup names
+  function _expectCharaFunc(c) { return _EXCEPT_EXP.test(c); }
   function _katakana(c) { return _KATAKANA_EXP.test(c); }
   function _katakana_mark(c) { return _KATAKANA_MARK_EXP.test(c); }
   function _katakana_mark_alpha_num(c) { return _KATAKANA_MARK_ALPHANUM_EXP.test(c); }
@@ -199,20 +206,21 @@
     ret.pos = pos - ret.start;
     return ret;
   }
-  // 使用されない（と思われる）記号（TABCRLF/\^$*+?.|[]{};"'%&=~@`,_!#。、！？）
-  const _EXCEPT_EXP = /[^\t\r\n\/\\\^\$\*\+\?\.\|\[\]\{\}\;\"\'\%\&\=\~\@\`\,\_\!\#。、！？]/;
-  function _expectCharaFunc(c) {
-    return _EXCEPT_EXP.test(c);
-  }
-  // pickup text
-  const _pickupHoverText_err_ret = { text: '', pos: 0 };
-  function _pickupHoverText(x, y) {
-    const range = document.caretRangeFromPoint(x, y);
-    if (! range) return _pickupHoverText_err_ret;
+  // pickup hovered range and text node
+  function _pickupHoveredTextNode(e) {
+    let range;
+    if (document.caretRangeFromPoint) { // webkit (chrome)
+      range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    } else if (e.rangeParent) { // Mozilla
+      range = document.createRange();
+      range.setStart(e.rangeParent, e.rangeOffset);
+    } else {
+      return null;
+    }
+    if (! range) return null;
     const textNode = range.startContainer;
-    if (! textNode || textNode.nodeType != 3) return _pickupHoverText_err_ret;
-    const pickinfo = _doPick(textNode.nodeValue, range.startOffset, _expectCharaFunc);
-    return { text: pickinfo.text, pos: pickinfo.pos };
+    if (! textNode || textNode.nodeType != 3) return null;
+    return { textNode: textNode, range: range };
   }
   
   //
