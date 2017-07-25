@@ -275,13 +275,15 @@ let refreshMenu;
         nodes.push(this.fd_s);
       }
       // Copy link text
-      nodes.push(new MenuItemWrapper({
-        title: search_word + 'をクリップボードにコピー',
-        id: 'CP-word',
-        contexts: this.cp_s.contexts,
-        parentId: this.root.id
-      }));
-      nodes.push(this.cp_s);
+      if (document.queryCommandSupported('copy')) {
+        nodes.push(new MenuItemWrapper({
+          title: search_word + 'をクリップボードにコピー',
+          id: 'CP-word',
+          contexts: this.cp_s.contexts,
+          parentId: this.root.id
+        }));
+        nodes.push(this.cp_s);
+      }
       // Search sites
       const sites = this._getValidSites(opt.data.search.sites);
       for (var i = 0; i < sites.length; i++) {
