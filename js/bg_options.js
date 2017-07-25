@@ -41,7 +41,6 @@ let resetOption;
           { use: true, name: '公式DB', url: 'http://jp.finalfantasyxiv.com/lodestone/playguide/db/search/?q=<WORD>' },
           { use: true, name: 'ERIONES', url: 'https://eriones.com/search?i=<WORD>' },
           { use: true, name: '猫はお腹がすいた', url: 'http://ff14angler.com/?search=<WORD>' },
-          { use: true, name: '俺toolsレシピ', url: 'http://ffxiv.rs.exdreams.net/?q=<WORD>' },
           { use: true, name: 'Google', url: 'https://www.google.co.jp/search?q=FFXIV+<WORD>' }
         ]
       },
