@@ -60,15 +60,3 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     break;
   }
 });
-
-const copy2ClipBoard = (function(){
-  const _copyTextArea = document.createElement('textarea');
-  // _copyTextArea.style.cssText = 'position:absolute;left:-100%';
-  document.body.appendChild(_copyTextArea);
-  return function(str) {
-    _copyTextArea.value = str;
-    _copyTextArea.select();
-    document.execCommand('copy');
-    console.log('[COPY]', str);
-  };
-})();

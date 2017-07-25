@@ -20,7 +20,7 @@ let refreshMenu;
       _menuSearchInventory(tab);
       return;
     case 'CP-word':
-      _copyWord(tab);
+      chrome.tabs.sendMessage(tab.id, { method: 'Nunze_copySelection' }, function(response){});
       return;
     case 'RS-open':
       // RS is not implemented now.
@@ -41,17 +41,6 @@ let refreshMenu;
     }
   };
   chrome.contextMenus.onClicked.addListener(_onMenuClick);
-  //
-  // Copy to Clipboard
-  //
-  function _copyWord(tab) {
-    chrome.tabs.sendMessage(tab.id, { method: 'Nunze_getSelection' }, function(response){
-      if (! response) return;
-      const str = response.selection;
-      if (! str || str.length == 0) return;
-      copy2ClipBoard(str);
-    });
-  }
   //
   // Search in Inventory
   //
@@ -275,13 +264,15 @@ let refreshMenu;
         nodes.push(this.fd_s);
       }
       // Copy link text
-      nodes.push(new MenuItemWrapper({
-        title: search_word + 'をクリップボードにコピー',
-        id: 'CP-word',
-        contexts: this.cp_s.contexts,
-        parentId: this.root.id
-      }));
-      nodes.push(this.cp_s);
+      if (document.queryCommandSupported('copy')) {
+        nodes.push(new MenuItemWrapper({
+          title: search_word + 'をクリップボードにコピー',
+          id: 'CP-word',
+          contexts: this.cp_s.contexts,
+          parentId: this.root.id
+        }));
+        nodes.push(this.cp_s);
+      }
       // Search sites
       const sites = this._getValidSites(opt.data.search.sites);
       for (var i = 0; i < sites.length; i++) {
