@@ -26,7 +26,7 @@ let refreshMenu;
       // RS is not implemented now.
       return;
     case 'OP-loadstone':
-      chrome.tabs.create({ url: 'options.html' });
+      chrome.tabs.create({ url: 'http://jp.finalfantasyxiv.com/lodestone/' });
       return;
     case 'OP-options':
       chrome.tabs.create({ url: 'options.html' });
