@@ -111,8 +111,9 @@ function initialize_nunze_loadstone_content_script() {
   }
   // Load items
   function getItems() {
-    const baggage = document.getElementsByClassName('sys_item_row');
     const items = [];
+    // items
+    const baggage = document.querySelectorAll('li.sys_item_row');
     forEach.call(baggage, function(e){
       const name_h4 = e.getElementsByTagName('h4');
       if (name_h4.length != 1) return;
@@ -140,7 +141,51 @@ function initialize_nunze_loadstone_content_script() {
         collectable: isCol
       });
     });
+    // crystals
+    const crystal_table = document.querySelector('div.table__crystal table');
+    if (! crystal_table) return items;
+    const kinds_th = crystal_table.querySelectorAll('thead th span');
+    const kinds = [];
+    for (let i = 0; i < kinds_th.length; i++) {
+      const name = kinds_th[i].getAttribute('data-tooltip');
+      if (name.length > 0) kinds.push(name);
+    }
+    if (kinds.length < 3) return items;
+    const lines = crystal_table.querySelectorAll('tbody tr');
+    for (let i = 0; i < lines.length; i++) {
+      const elm = _getElementName(lines[i].querySelector('th span'));
+      if (elm.length == 0) continue;
+      const tds = lines[i].querySelectorAll('td a');
+      if (tds.length != kinds.length) continue;
+      for (let j = 0; j < tds.length; j++) {
+        // console.log(elm + kinds[j]);
+        const num = _getCrystalNumber(tds[j]);
+        if (num <= 0) continue;
+        items.push({
+          name: elm + kinds[j],
+          number: num,
+          HQ: false,
+          collectable: false
+        });
+      }
+    }
     return items;
+  }
+  const _ELEMENT_NAME = {
+    '火': 'ファイア', '氷': 'アイス', '風': 'ウィンド', '土': 'アース', '雷': 'ライトニング', '水': 'ウォーター'
+  };
+  function _getCrystalNumber(node) {
+    const num_s = node.innerText.replace(/[ \t\r\n]/g, '');
+    if (num_s.length == 0) return 0;
+    const num_i = parseInt(num_s, 10);
+    if (isNaN(num_i)) return 0;
+    return num_i;
+  }
+  function _getElementName(node) {
+    if (! node) return '';
+    const elm = node.getAttribute('data-tooltip');
+    if (_ELEMENT_NAME[elm]) return _ELEMENT_NAME[elm];
+    return '';
   }
   //
   // Add Nunze button
