@@ -48,6 +48,11 @@ function initialize_nunze_loadstone_content_script() {
     if (! ans) return;
     // save character data
     const chara = getCharacter();
+    if (! chara) {
+      alert('[Nunze]キャラクター情報の保存に失敗しました。\n' +
+        'ページを更新して再度試してみてください。');
+      return;
+    }
     chara.retainers = getRetainers();
     chara.load_datetime = (new Date()).getTime();
     chrome.runtime.sendMessage({
@@ -81,6 +86,7 @@ function initialize_nunze_loadstone_content_script() {
   // Load Character
   function getCharacter(charabox) {
     if (! charabox) charabox = document.querySelector('div.head-my-character__box');
+    if (! charabox) return null;
     const li = charabox.querySelector('ul.my-menu__colmun li');
     if (! li) return null;
     const a = li.querySelectorAll('a')[1];
@@ -187,28 +193,64 @@ function initialize_nunze_loadstone_content_script() {
     if (_ELEMENT_NAME[elm]) return _ELEMENT_NAME[elm];
     return '';
   }
+  // get FC url
+  function getFCChestUrl(charabox_uls) {
+    if (! charabox_uls)
+      charabox_uls = document.querySelectorAll('div.head-my-character__box ul.my-menu__colmun');
+    for (let i = 0; i < charabox_uls.length; i++) {
+      const li_a = charabox_uls[i].querySelectorAll('li a');
+      for (let j = 0; j < li_a.length; j++) {
+        if (li_a[j].innerText.indexOf('フリーカンパニー') == 0) {
+          if (li_a[j].href[li_a[j].href.length - 1] == '/')
+            return li_a[j].href + 'chest/';
+          else
+            return li_a[j].href + '/chest/';
+        }
+      }
+    }
+    return '';
+  }
+  // load FC chest
+  function loadFCChest() {
+  
+  }
   //
   // Add Nunze button
   //
+  function _createNunzeMenu(title, href_or_onclick) {
+    const nunzea = document.createElement('a');
+    nunzea.innerText = '[Nunze] ' + title;
+    if (typeof(href_or_onclick) == 'function') {
+      nunzea.addEventListener('click', href_or_onclick, false);
+      nunzea.href = '#';
+    } else {
+      nunzea.href = href_or_onclick;
+    }
+    return nunzea;
+  }
   function initialize() {
     const charabox = document.querySelector('div.head-my-character__box');
     if (! charabox) return;
     const chara = getCharacter(charabox);
     if (! chara) return;
-    const ul = charabox.querySelectorAll('ul.my-menu__colmun')[1];
-    if (! charabox) return;
+    const uls = charabox.querySelectorAll('ul.my-menu__colmun');
     const nunzeli = document.createElement('li');
-    const nunzea = document.createElement('a');
+    uls[1].appendChild(nunzeli);
+    // add retainer menu
     if (REGX_RETAINER.test(window.location.href)) {
-      nunzea.innerText = '[Nunze] リテイナー情報読み取り';
-      nunzea.href = '#';
-      nunzea.addEventListener('click', loadInventories, false);
+      nunzeli.appendChild(_createNunzeMenu('リテイナー情報読み取り', loadInventories));
     } else {
-      nunzea.innerText = '[Nunze] リテイナーページへ';
-      nunzea.href = buildRetainerUrl(chara);
+      nunzeli.appendChild(_createNunzeMenu('リテイナーページへ', buildRetainerUrl(chara)));
     }
-    nunzeli.appendChild(nunzea);
-    ul.appendChild(nunzeli);
+    // add FC menu
+    const fc_url = getFCChestUrl(uls);
+    if (fc_url.length > 0) {
+      if (window.location.href.toLowerCase().indexOf(fc_url.toLowerCase()) == 0) {
+        nunzeli.appendChild(_createNunzeMenu('FCチェスト情報読み取り', loadFCChest));
+      } else {
+        nunzeli.appendChild(_createNunzeMenu('FCチェストページへ', fc_url));
+      }
+    }
   }
   initialize();
 }
