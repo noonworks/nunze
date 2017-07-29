@@ -7,7 +7,7 @@ function initialize_nunze_loadstone_content_script() {
     if (message.method === 'Nunze_LoadInventory') {
       const inv = loadInventory();
       if (! inv) {
-        failAlertInv();
+        failAlert('リテイナー所持品情報の取得');
         return;
       }
       chrome.runtime.sendMessage({
@@ -16,7 +16,7 @@ function initialize_nunze_loadstone_content_script() {
         'inCrawling': true
       }, function(response){
         if (! response || ! response.status || response.status == 'fail') {
-          failAlertInv();
+          failAlert('リテイナー所持品情報の保存');
         } else if (response.status == 'completed') {
           alert('[Nunze]リテイナー所持品情報を保存しました。');
         }
@@ -25,8 +25,8 @@ function initialize_nunze_loadstone_content_script() {
       sendResponse({});
     }
   });
-  function failAlertInv() {
-    alert('[Nunze]リテイナー所持品情報の保存に失敗しました。\n' +
+  function failAlert(what) {
+    alert('[Nunze]' + what + 'に失敗しました。\n' +
       'ページを更新して再度試してみてください。');
   }
   //
@@ -49,8 +49,7 @@ function initialize_nunze_loadstone_content_script() {
     // save character data
     const chara = getCharacter();
     if (! chara) {
-      alert('[Nunze]キャラクター情報の保存に失敗しました。\n' +
-        'ページを更新して再度試してみてください。');
+      failAlert('キャラクター情報の保存');
       return;
     }
     chara.retainers = getRetainers();
@@ -60,8 +59,7 @@ function initialize_nunze_loadstone_content_script() {
       'characters': [chara]
     }, function(response){
       if (! response || ! response.succeed) {
-        alert('[Nunze]キャラクター情報の保存に失敗しました。\n' +
-          'ページを更新して再度試してみてください。');
+        failAlert('キャラクター情報の保存');
         return;
       }
       chrome.runtime.sendMessage({
