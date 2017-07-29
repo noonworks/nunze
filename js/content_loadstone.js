@@ -32,6 +32,37 @@ function initialize_nunze_loadstone_content_script() {
   //
   // Load data
   //
+  const REGX_BAGGAGE = /character\/([0-9a-z]+)\/retainer\/([0-9a-z]+)\/baggage/;
+  const REGX_FCCHEST = /freecompany\/([0-9a-z]+)\/chest/;
+  // load FC chest
+  function loadFCChest() {
+    const m = window.location.href.match(REGX_FCCHEST);
+    if (!m) {
+      failAlert('FCチェスト情報の読み取り');
+      return;
+    }
+    // FC情報の保存
+    // TODO: SAVE FC DATA
+    // FCチェスト情報の保存
+    const inv = {
+      character_id: 'FREECOMPANY',
+      retainer_id: m[1],
+      load_datetime: (new Date()).getTime(),
+      items: getItems()
+    };
+    chrome.runtime.sendMessage({
+      'method': 'Nunze_saveInventories',
+      'inventories': [inv],
+      'inCrawling': false
+    }, function(response){
+      if (! response || ! response.succeed) {
+        failAlert('FCチェスト情報の保存');
+      } else {
+        alert('[Nunze]FCチェスト情報を保存しました。');
+      }
+    });
+  }
+  // load retainer inventory
   function loadInventory(){
     const m = window.location.href.match(REGX_BAGGAGE);
     if (!m) return null;
@@ -74,7 +105,6 @@ function initialize_nunze_loadstone_content_script() {
   const REGX_CHARACTER = /character\/([0-9a-z]+)/;
   const REGX_RETAINER = /character\/([0-9a-z]+)\/retainer/;
   const REGX_RETAINERS = /.*\/retainer\/([0-9a-zA-Z]+).*/;
-  const REGX_BAGGAGE = /character\/([0-9a-z]+)\/retainer\/([0-9a-z]+)\/baggage/;
   const REGX_STRIP = /^[\t\s\r\n]*(.*?)[\t\s\r\n]*$/;
   const forEach = Array.prototype.forEach;
   function buildRetainerUrl(chara, retainer) {
@@ -117,7 +147,7 @@ function initialize_nunze_loadstone_content_script() {
   function getItems() {
     const items = [];
     // items
-    const baggage = document.querySelectorAll('li.sys_item_row');
+    const baggage = document.querySelectorAll('li.item-list__list');
     forEach.call(baggage, function(e){
       const name_h4 = e.getElementsByTagName('h4');
       if (name_h4.length != 1) return;
@@ -207,10 +237,6 @@ function initialize_nunze_loadstone_content_script() {
       }
     }
     return '';
-  }
-  // load FC chest
-  function loadFCChest() {
-  
   }
   //
   // Add Nunze button
