@@ -7,7 +7,7 @@ function initialize_nunze_loadstone_content_script() {
     if (message.method === 'Nunze_LoadInventory') {
       const inv = loadInventory();
       if (! inv) {
-        failAlertInv();
+        failAlert('リテイナー所持品情報の取得');
         return;
       }
       chrome.runtime.sendMessage({
@@ -16,7 +16,7 @@ function initialize_nunze_loadstone_content_script() {
         'inCrawling': true
       }, function(response){
         if (! response || ! response.status || response.status == 'fail') {
-          failAlertInv();
+          failAlert('リテイナー所持品情報の保存');
         } else if (response.status == 'completed') {
           alert('[Nunze]リテイナー所持品情報を保存しました。');
         }
@@ -25,13 +25,53 @@ function initialize_nunze_loadstone_content_script() {
       sendResponse({});
     }
   });
-  function failAlertInv() {
-    alert('[Nunze]リテイナー所持品情報の保存に失敗しました。\n' +
+  function failAlert(what) {
+    alert('[Nunze]' + what + 'に失敗しました。\n' +
       'ページを更新して再度試してみてください。');
   }
   //
   // Load data
   //
+  const REGX_BAGGAGE = /character\/([0-9a-z]+)\/retainer\/([0-9a-z]+)\/baggage/;
+  // load FC chest
+  function loadFCChest() {
+    const fc = getMyFC();
+    if (!fc) {
+      failAlert('FCチェスト情報の読み取り');
+      return;
+    }
+    const dt = (new Date()).getTime();
+    fc.load_datetime = dt;
+    const inv = {
+      character_id: 'FREECOMPANY',
+      retainer_id: fc.id,
+      load_datetime: dt,
+      items: getItems()
+    };
+    // FC情報の保存
+    chrome.runtime.sendMessage({
+      'method': 'Nunze_saveFreeCompany',
+      'fc': fc
+    }, function(response){
+      if (! response || ! response.succeed) {
+        failAlert('FC情報の保存');
+        return;
+      }
+      // FCチェスト情報の保存
+      chrome.runtime.sendMessage({
+        'method': 'Nunze_saveInventories',
+        'inventories': [inv],
+        'inCrawling': false
+      }, function(response){
+        if (! response || ! response.succeed) {
+          failAlert('FCチェスト情報の保存');
+          return;
+        }
+        alert('[Nunze]FCチェスト情報を保存しました。');
+      });
+    });
+  }
+  // load retainer inventory
   function loadInventory(){
     const m = window.location.href.match(REGX_BAGGAGE);
     if (!m) return null;
@@ -48,6 +88,10 @@ function initialize_nunze_loadstone_content_script() {
     if (! ans) return;
     // save character data
     const chara = getCharacter();
+    if (! chara) {
+      failAlert('キャラクター情報の保存');
+      return;
+    }
     chara.retainers = getRetainers();
     chara.load_datetime = (new Date()).getTime();
     chrome.runtime.sendMessage({
@@ -55,8 +99,7 @@ function initialize_nunze_loadstone_content_script() {
       'characters': [chara]
     }, function(response){
       if (! response || ! response.succeed) {
-        alert('[Nunze]キャラクター情報の保存に失敗しました。\n' +
-          'ページを更新して再度試してみてください。');
+        failAlert('キャラクター情報の保存');
         return;
       }
       chrome.runtime.sendMessage({
@@ -71,16 +114,31 @@ function initialize_nunze_loadstone_content_script() {
   const REGX_CHARACTER = /character\/([0-9a-z]+)/;
   const REGX_RETAINER = /character\/([0-9a-z]+)\/retainer/;
   const REGX_RETAINERS = /.*\/retainer\/([0-9a-zA-Z]+).*/;
-  const REGX_BAGGAGE = /character\/([0-9a-z]+)\/retainer\/([0-9a-z]+)\/baggage/;
   const REGX_STRIP = /^[\t\s\r\n]*(.*?)[\t\s\r\n]*$/;
+  const REGX_FCCHEST = /freecompany\/([0-9a-z]+)\/chest/;
   const forEach = Array.prototype.forEach;
   function buildRetainerUrl(chara, retainer) {
     return 'http://jp.finalfantasyxiv.com/lodestone/character/' +
       chara.id + '/retainer/' + (retainer ? retainer.id : '');
   }
+  // Load FC
+  function getMyFC() {
+    const m = window.location.href.match(REGX_FCCHEST);
+    const fcp = document.querySelector('div.entry__freecompany__box p.entry__freecompany__name');
+    const chara = getCharacter();
+    if (!m || !fcp || !chara) return null;
+    const fc = { id: m[1], name: fcp.innerText, world: chara.world };
+    if (fc.name.length > 6) {
+      const fc_s_ps = document.querySelectorAll('div.entry__freecompany__box p.entry__freecompany__gc');
+      if (fc_s_ps.length >= 2)
+        fc.name = fc_s_ps[1].innerText.replace(REGX_STRIP, '$1');
+    }
+    return fc;
+  }
   // Load Character
   function getCharacter(charabox) {
     if (! charabox) charabox = document.querySelector('div.head-my-character__box');
+    if (! charabox) return null;
     const li = charabox.querySelector('ul.my-menu__colmun li');
     if (! li) return null;
     const a = li.querySelectorAll('a')[1];
@@ -113,7 +171,7 @@ function initialize_nunze_loadstone_content_script() {
   function getItems() {
     const items = [];
     // items
-    const baggage = document.querySelectorAll('li.sys_item_row');
+    const baggage = document.querySelectorAll('li.item-list__list');
     forEach.call(baggage, function(e){
       const name_h4 = e.getElementsByTagName('h4');
       if (name_h4.length != 1) return;
@@ -187,28 +245,60 @@ function initialize_nunze_loadstone_content_script() {
     if (_ELEMENT_NAME[elm]) return _ELEMENT_NAME[elm];
     return '';
   }
+  // get FC url
+  function getFCChestUrl(charabox_uls) {
+    if (! charabox_uls)
+      charabox_uls = document.querySelectorAll('div.head-my-character__box ul.my-menu__colmun');
+    for (let i = 0; i < charabox_uls.length; i++) {
+      const li_a = charabox_uls[i].querySelectorAll('li a');
+      for (let j = 0; j < li_a.length; j++) {
+        if (li_a[j].innerText.indexOf('フリーカンパニー') == 0) {
+          if (li_a[j].href[li_a[j].href.length - 1] == '/')
+            return li_a[j].href + 'chest/';
+          else
+            return li_a[j].href + '/chest/';
+        }
+      }
+    }
+    return '';
+  }
   //
   // Add Nunze button
   //
+  function _createNunzeMenu(title, href_or_onclick) {
+    const nunzea = document.createElement('a');
+    nunzea.innerText = '[Nunze] ' + title;
+    if (typeof(href_or_onclick) == 'function') {
+      nunzea.addEventListener('click', href_or_onclick, false);
+      nunzea.href = '#';
+    } else {
+      nunzea.href = href_or_onclick;
+    }
+    return nunzea;
+  }
   function initialize() {
     const charabox = document.querySelector('div.head-my-character__box');
     if (! charabox) return;
     const chara = getCharacter(charabox);
     if (! chara) return;
-    const ul = charabox.querySelectorAll('ul.my-menu__colmun')[1];
-    if (! charabox) return;
+    const uls = charabox.querySelectorAll('ul.my-menu__colmun');
     const nunzeli = document.createElement('li');
-    const nunzea = document.createElement('a');
+    uls[1].appendChild(nunzeli);
+    // add retainer menu
     if (REGX_RETAINER.test(window.location.href)) {
-      nunzea.innerText = '[Nunze] リテイナー情報読み取り';
-      nunzea.href = '#';
-      nunzea.addEventListener('click', loadInventories, false);
+      nunzeli.appendChild(_createNunzeMenu('リテイナー情報読み取り', loadInventories));
     } else {
-      nunzea.innerText = '[Nunze] リテイナーページへ';
-      nunzea.href = buildRetainerUrl(chara);
+      nunzeli.appendChild(_createNunzeMenu('リテイナーページへ', buildRetainerUrl(chara)));
     }
-    nunzeli.appendChild(nunzea);
-    ul.appendChild(nunzeli);
+    // add FC menu
+    const fc_url = getFCChestUrl(uls);
+    if (fc_url.length > 0) {
+      if (window.location.href.toLowerCase().indexOf(fc_url.toLowerCase()) == 0) {
+        nunzeli.appendChild(_createNunzeMenu('FCチェスト情報読み取り', loadFCChest));
+      } else {
+        nunzeli.appendChild(_createNunzeMenu('FCチェストページへ', fc_url));
+      }
+    }
   }
   initialize();
 }

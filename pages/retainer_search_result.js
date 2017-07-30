@@ -76,8 +76,12 @@ function buildCountSummary(counts, totalCounts) {
   if (cnts.length > 1) cnts[0] = '[NQ] ' + cnts[0];
   return ' ( ' + cnts.join(' / ') + ' )';
 }
+function shortenWorld(world) {
+  if (!world || world.length == 0) return '';
+  return ' (' + world.slice(0, 8) + ')';
+}
 function shortenName(name, world) {
-  return name.replace(/^(.+ [A-Z]).+$/, '$1.') + ' (' + world.slice(0, 8) + ')'
+  return name.replace(/^(.+ [A-Z]).+$/, '$1.') + shortenWorld(world);
 }
 function toInspireTreeNode(summary, data) {
   const node = {
@@ -96,7 +100,8 @@ function toInspireTreeNode(summary, data) {
       const r_id = summary[c_id].retainer_ids[ri];
       const retainer = data.characters[c_id].retainers[r_id];
       const ret_node = {
-        text: retainer.name + buildCountSummary(summary[c_id][r_id].total, summary.total)
+        text: retainer.name + shortenWorld(retainer.world) +
+          buildCountSummary(summary[c_id][r_id].total, summary.total)
       }
       chara_node.children.push(ret_node);
     }
