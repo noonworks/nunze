@@ -6,6 +6,7 @@ let startRetainerCrawler; // Crawl retainer pages
 let saveInventories; // Add or update (with loop)
 let saveInventoriesInCrawling; // Add or update (with loop) in crawling
 let saveCharacters; // Add or update (with loop)
+let saveFreeCompany; // Add or update
 let deleteInventories; // Delete all inventory data
 let deleteCharacters; // Delete all characters data
 let searchInventory;
@@ -112,6 +113,26 @@ let searchInventory;
     }
     return characters_storage.save(chardata);
   };
+  //
+  // Save FreeCompany
+  const _CHARAID_FC = 'FREECOMPANY';
+  saveFreeCompany = function(fc) {
+    const chardata = _getCharacters();
+    const char_ids = Object.keys(chardata.data);
+    if (char_ids.indexOf(_CHARAID_FC) < 0) {
+      chardata.data[_CHARAID_FC] = {
+        id: _CHARAID_FC,
+        name: 'フリーカンパニー',
+        load_datetime: (new Date()).getTime(),
+        retainers: {}
+      };
+    }
+    if (Object.keys(fc).indexOf('load_datetime') >= 0)
+      chardata.data[_CHARAID_FC].load_datetime = fc.load_datetime;
+    chardata.data[_CHARAID_FC].retainers[fc.id] = { id: fc.id, name: fc.name, world: fc.world };
+    return characters_storage.save(chardata);
+  }
+  //
   //
   // Search Inventory Function
   //

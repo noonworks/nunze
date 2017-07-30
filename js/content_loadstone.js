@@ -33,33 +33,42 @@ function initialize_nunze_loadstone_content_script() {
   // Load data
   //
   const REGX_BAGGAGE = /character\/([0-9a-z]+)\/retainer\/([0-9a-z]+)\/baggage/;
-  const REGX_FCCHEST = /freecompany\/([0-9a-z]+)\/chest/;
   // load FC chest
   function loadFCChest() {
-    const m = window.location.href.match(REGX_FCCHEST);
-    if (!m) {
+    const fc = getMyFC();
+    if (!fc) {
       failAlert('FCチェスト情報の読み取り');
       return;
     }
-    // FC情報の保存
-    // TODO: SAVE FC DATA
-    // FCチェスト情報の保存
+    const dt = (new Date()).getTime();
+    fc.load_datetime = dt;
     const inv = {
       character_id: 'FREECOMPANY',
-      retainer_id: m[1],
-      load_datetime: (new Date()).getTime(),
+      retainer_id: fc.id,
+      load_datetime: dt,
       items: getItems()
     };
+    // FC情報の保存
     chrome.runtime.sendMessage({
-      'method': 'Nunze_saveInventories',
-      'inventories': [inv],
-      'inCrawling': false
+      'method': 'Nunze_saveFreeCompany',
+      'fc': fc
     }, function(response){
       if (! response || ! response.succeed) {
-        failAlert('FCチェスト情報の保存');
-      } else {
-        alert('[Nunze]FCチェスト情報を保存しました。');
+        failAlert('FC情報の保存');
+        return;
       }
+      // FCチェスト情報の保存
+      chrome.runtime.sendMessage({
+        'method': 'Nunze_saveInventories',
+        'inventories': [inv],
+        'inCrawling': false
+      }, function(response){
+        if (! response || ! response.succeed) {
+          failAlert('FCチェスト情報の保存');
+          return;
+        }
+        alert('[Nunze]FCチェスト情報を保存しました。');
+      });
     });
   }
   // load retainer inventory
@@ -106,10 +115,25 @@ function initialize_nunze_loadstone_content_script() {
   const REGX_RETAINER = /character\/([0-9a-z]+)\/retainer/;
   const REGX_RETAINERS = /.*\/retainer\/([0-9a-zA-Z]+).*/;
   const REGX_STRIP = /^[\t\s\r\n]*(.*?)[\t\s\r\n]*$/;
+  const REGX_FCCHEST = /freecompany\/([0-9a-z]+)\/chest/;
   const forEach = Array.prototype.forEach;
   function buildRetainerUrl(chara, retainer) {
     return 'http://jp.finalfantasyxiv.com/lodestone/character/' +
       chara.id + '/retainer/' + (retainer ? retainer.id : '');
+  }
+  // Load FC
+  function getMyFC() {
+    const m = window.location.href.match(REGX_FCCHEST);
+    const fcp = document.querySelector('div.entry__freecompany__box p.entry__freecompany__name');
+    const chara = getCharacter();
+    if (!m || !fcp || !chara) return null;
+    const fc = { id: m[1], name: fcp.innerText, world: chara.world };
+    if (fc.name.length > 6) {
+      const fc_s_ps = document.querySelectorAll('div.entry__freecompany__box p.entry__freecompany__gc');
+      if (fc_s_ps.length >= 2)
+        fc.name = fc_s_ps[1].innerText.replace(REGX_STRIP, '$1');
+    }
+    return fc;
   }
   // Load Character
   function getCharacter(charabox) {
