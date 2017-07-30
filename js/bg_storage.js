@@ -6,18 +6,18 @@ class MigratableLocalStorage {
   }
   // Migrate and Save data
   save(data) {
-    console.log('MigratableLocalStorage.save', data);
+    //console.log('MigratableLocalStorage.save', data);
     data = this.migrate(data);
     localStorage.setItem(this.key, JSON.stringify(data));
     return data;
   }
   // Load and Migrate data
   load() {
-    console.log('MigratableLocalStorage.load');
-    console.log('-- load from local storage.');
+    //console.log('MigratableLocalStorage.load');
+    //console.log('-- load from local storage.');
     let str = localStorage.getItem(this.key);
     if (!str) {
-      console.log('-- no data. use default data.');
+      //console.log('-- no data. use default data.');
       str = JSON.stringify(this.default_data);
       localStorage.setItem(this.key, str);
     }
@@ -45,13 +45,13 @@ class CacheLocalStorage extends MigratableLocalStorage {
   }
   // Save and Cache data
   save(data) {
-    console.log('CacheLocalStorage.save', data);
+    //console.log('CacheLocalStorage.save', data);
     this.cache = super.save(data);
     return this.cache;
   }
   // Load and Cache data
   load(reload) {
-    console.log('CacheLocalStorage.load', reload);
+    //console.log('CacheLocalStorage.load', reload);
     if (this.cache == null) reload = true;
     if (reload) this.cache = super.load();
     return this.cache;
@@ -86,7 +86,7 @@ class DebounceSaveCacheStorage extends CacheLocalStorage {
     clearTimeout(this.save_timer);
     const me = this;
     this.save_timer = setTimeout(function() {
-      console.log('DebounceCacheStorage.save');
+      //console.log('DebounceCacheStorage.save');
       me._doDebounceSave(data);
     }, DEBOUNCESAVECACHESTORAGE_INTERVAL);
   }
