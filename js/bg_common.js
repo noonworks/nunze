@@ -30,14 +30,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     saveFreeCompany(message.fc);
     sendResponse({ succeed: true });
     break;
-  // Search history methods
-  case 'Nunze_searchWordsInHistory':
-    sendResponse({ result: searchWordsInHistory(message.words) });
-    break;
-  case 'Nunze_clearSearchHistory':
-    clearSearchHistory();
-    sendResponse({ succeed: true });
-    break;
   // Option Data methods
   case 'Nunze_getOption':
     sendResponse({ opt: getOption() });

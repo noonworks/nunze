@@ -281,36 +281,6 @@ iframe { width: 0; height: 0; margin: 0; padding: 0; display: none; }
 </section><!-- id="sec_loadstone" -->
 
 
-<section id="sec_detect" style="display: none;">
-<h1>検索履歴ポップアップ機能</h1>
-<div class="description">
-  <p>ページ内の単語にマウスオーバーした際に、検索履歴から情報を表示する機能です。</p>
-  <ul>
-    <li>マウスオーバーした単語が検索履歴内のアイテムにヒットした場合、情報をポップアップ表示します。</li>
-    <li>検索履歴には、以下のサイトで検索してヒットした結果が保存されます。
-      <ul>
-        <li>公式DB</li>
-        <li>ERIONES</li>
-      </ul>
-    </li>
-    <li>LoadStone読み取りが有効な場合は、リテイナー所持品の検索履歴も対象となります。</li>
-  </ul>
-</div>
-<div class="options">
-  <fieldset :class="{ disabled: !data.mouseover.use }">
-    <legend>
-      <input type="checkbox" id="useMouseover" v-model="data.mouseover.use">
-      <label for="useMouseover">検索履歴ポップアップ機能を使用する</label>
-    </legend>
-    <label for="mouseoverHistoryMax">アイテム検索履歴保存件数</label>
-    <input type="number" id="mouseoverHistoryMax" :disabled="!data.mouseover.use"
-      v-model.number="data.mouseover.historyMax"><br />
-    <button :disabled="!data.mouseover.use">アイテム検索履歴を削除する</button>
-  </fieldset>
-</div>
-</section><!-- id="sec_detect" -->
-
-
 <section id="sec_other" style="display: none;">
 <h1>その他の機能</h1>
 <div class="description">

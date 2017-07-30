@@ -73,7 +73,7 @@ let refreshMenu;
   // Create Menu
   //
   function _createMenu() {
-    console.log('_createMenu');
+    //console.log('_createMenu');
     context_menu = new MenuWrapper(getOption());
   }
   chrome.runtime.onInstalled.addListener(_createMenu);
@@ -85,7 +85,7 @@ let refreshMenu;
   let menu_search_cache = '';
   updateSearchMenu = function(name) {
     if (name == menu_search_cache) return;
-    console.log('==> updateSearchMenu', name);
+    //console.log('==> updateSearchMenu', name);
     context_menu.refresh(getOption(), { search_word: name });
     menu_search_cache = name;
   }
@@ -93,7 +93,7 @@ let refreshMenu;
   let menu_addstack_cache = '';
   updateAddStackMenu = function(name) {
     if (name == menu_addstack_cache) return;
-    console.log('==> updateAddStackMenu', name);
+    //console.log('==> updateAddStackMenu', name);
     context_menu.refresh(getOption(), { addstack_word: name });
     menu_addstack_cache = name;
   }
@@ -101,7 +101,7 @@ let refreshMenu;
   // Refresh Menu
   //
   refreshMenu = function() {
-    console.log('refreshMenu');
+    //console.log('refreshMenu');
     context_menu.refresh(getOption(), {
       search_word: menu_search_cache,
       addstack_word: menu_addstack_cache
@@ -200,40 +200,40 @@ let refreshMenu;
       this.refresh(opt);
     }
     refresh(opt, additional_opt) {
-      console.log('MenuWrapper refresh ===');
+      //console.log('MenuWrapper refresh ===');
       const newnodes = this._buildNodes(opt, additional_opt);
       let i = 0;
       while (i < this.nodes.length && i < newnodes.length) {
         // Remove node if IDs are different.
         if (this.nodes[i].id != newnodes[i].id) {
-          console.log('-- remove', i);
+          //console.log('-- remove', i);
           this.nodes[i].remove();
           this.nodes.splice(i, 1);
           continue;
         }
         // Update title
         if (this.nodes[i].title != newnodes[i].title) {
-          console.log('-- updateTitle', i, this.nodes[i].title, '->', newnodes[i].title);
+          //console.log('-- updateTitle', i, this.nodes[i].title, '->', newnodes[i].title);
           this.nodes[i].updateTitle(newnodes[i].title);
         }
         i++;
       }
       const over_cnt = this.nodes.length - newnodes.length;
-      console.log('-- over_cnt', over_cnt);
+      //console.log('-- over_cnt', over_cnt);
       // Remove nodes
       for (let i = over_cnt; i > 0; i--) {
-        console.log('-- remove', this.nodes.length - 1);
+        //console.log('-- remove', this.nodes.length - 1);
         this.nodes[this.nodes.length - 1].remove();
         this.nodes.pop();
       }
       // Insert nodes
-      console.log('-- add_from = newnodes.length + over_cnt', newnodes.length + over_cnt);
+      //console.log('-- add_from = newnodes.length + over_cnt', newnodes.length + over_cnt);
       for (let i = newnodes.length + over_cnt; i < newnodes.length; i++) {
-        console.log('-- create', i, newnodes[i].title);
+        //console.log('-- create', i, newnodes[i].title);
         newnodes[i].create();
         this.nodes.push(newnodes[i]);
       }
-      console.log('=== MenuWrapper refresh');
+      //console.log('=== MenuWrapper refresh');
     }
     _buildNodes(opt, additional_opt) {
       const nodes = [this.root];
