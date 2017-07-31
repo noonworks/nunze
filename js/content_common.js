@@ -10,7 +10,6 @@
       sendResponse({ selection: _selectedWord });
     } else if (message.method === 'Nunze_showInventorySearchResult') {
       _showSearchInventoryResult(message.result, message.characters, message.url);
-      // console.log('[ONMESSAGE Nunze_showInventorySearchResult]', message);
       sendResponse({});
     } else if (message.method === 'Nunze_copySelection') {
       if (_selectedWord.length > 0) {
@@ -45,10 +44,8 @@
   let _throttleHoverLinkTimer = 0;
   function _throttleHoverLink(e) {
     if (new Date().getTime() - _throttleHoverLinkTimer <= THROTTLE_HOVERLINK_TIME) return;
-    // console.log('_throttleHoverLink');
     if (e.target && e.target.tagName && e.target.tagName.toLowerCase() == 'a') {
       if (window.getSelection().toString().length == 0) {
-        // console.log(' - _changeSelectionWord', e.target.innerText);
         _changeSelectionWord(e.target.innerText);
       }
     }
@@ -105,7 +102,6 @@
   function _changeSelectionWord(word) {
     if (word.length == 0) return;
     _selectedWord = word;
-    // console.log('SELECT', _selectedWord);
     chrome.runtime.sendMessage({
       'method': 'Nunze_updateSearchMenu',
       'name': _selectedWord

@@ -216,7 +216,6 @@ function initialize_nunze_loadstone_content_script() {
       const tds = lines[i].querySelectorAll('td a');
       if (tds.length != kinds.length) continue;
       for (let j = 0; j < tds.length; j++) {
-        // console.log(elm + kinds[j]);
         const num = _getCrystalNumber(tds[j]);
         if (num <= 0) continue;
         items.push({

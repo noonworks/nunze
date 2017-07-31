@@ -8,7 +8,6 @@ let resetOption;
 (function(){
   // Get options (whole options, includes master or metadata)
   getOption = function(reload) {
-    //console.log('getOption', reload);
     return option_storage.load(reload);
   };
   // Save option data (only option data, without master or metadata)

@@ -37,10 +37,8 @@ let searchInventory;
   }
   function _waitTabToCrawl(tab) {
     if (tab.status == 'complete') {
-     // console.log('TAB UPDATED');
       chrome.tabs.sendMessage(tab.id, { method: 'Nunze_LoadInventory' });
     } else {
-     // console.log('TAB LOADING', tab.status);
       setTimeout(function(){
         chrome.tabs.get(tab.id, _waitTabToCrawl);
       }, 200);
@@ -51,7 +49,7 @@ let searchInventory;
     try {
       saveInventories(invs);
     } catch (e) {
-      //console.log(e);
+      console.log(e);
       return 'fail';
     }
     _crawlQueue.shift();
@@ -138,10 +136,8 @@ let searchInventory;
   //
   searchInventory = function(itemname, tab_id) {
     const result = _searchInventory(itemname);
-    //console.log('[SEARCHRESULT]', result);
     const characters = (result.number > 0) ? _getCharacters().data : {};
     const url = chrome.runtime.getURL('pages/retainer_search_result.html');
-    //console.log('[SEARCHRESULT_URL]', url);
     chrome.tabs.sendMessage(tab_id, {
       method: 'Nunze_showInventorySearchResult',
       result: result,
@@ -157,7 +153,6 @@ let searchInventory;
     const strictAndPart = opt.data.loadstone.strictAndPart;
     const strictAndFuzzy = opt.data.loadstone.strictAndFuzzy;
     const expire = opt.data.loadstone.expireDate * 24 * 60 * 60 * 1000;
-    //console.log('[EXPIRE]', expire);
     // Get inventory data
     const inventories = _getInventories();
     // Search in inventories
