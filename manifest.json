@@ -2,8 +2,8 @@
   "manifest_version": 2,
   
   "name": "Nunze",
-  "version": "0.0.4",
-  "version_name": "0.0.4 beta",
+  "version": "0.0.5",
+  "version_name": "0.0.5 beta",
   "description": "Add some FFXIV tools to context menu.",
   "author": "@noonworks",
   
