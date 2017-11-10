@@ -37,11 +37,17 @@
     "js": ["js/content_loadstone.js"],
     "matches": [
       "http://jp.finalfantasyxiv.com/lodestone/",
+      "https://jp.finalfantasyxiv.com/lodestone/",
       "http://jp.finalfantasyxiv.com/lodestone/my/*",
+      "https://jp.finalfantasyxiv.com/lodestone/my/*",
       "http://jp.finalfantasyxiv.com/lodestone/playguide/*",
+      "https://jp.finalfantasyxiv.com/lodestone/playguide/*",
       "http://jp.finalfantasyxiv.com/lodestone/character/*",
+      "https://jp.finalfantasyxiv.com/lodestone/character/*",
       "http://jp.finalfantasyxiv.com/lodestone/freecompany/*",
-      "http://jp.finalfantasyxiv.com/lodestone/linkshell/*"
+      "https://jp.finalfantasyxiv.com/lodestone/freecompany/*",
+      "http://jp.finalfantasyxiv.com/lodestone/linkshell/*",
+      "https://jp.finalfantasyxiv.com/lodestone/linkshell/*"
     ],
     "run_at": "document_end"
   }
