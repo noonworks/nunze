@@ -1,0 +1,8 @@
+{
+  "name": "nunze_ts",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "noonworks <noonworks@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
