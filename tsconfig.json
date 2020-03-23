@@ -4,12 +4,9 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "lib": ["dom"],
     "allowJs": false,
     "sourceMap": false,
     "strict": true,
-    "types": ["@types/node", "@types/jest"],
-    "skipLibCheck": true
-  },
-  "exclude": ["node_modules"]
+    "types": ["@types/node", "@types/jest"]
+  }
 }
