@@ -1,5 +1,9 @@
 {
-  "cSpell.words": ["nunze"],
+  "cSpell.words": [
+    "FFXIV",
+    "noonworks",
+    "nunze"
+  ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true
 }
