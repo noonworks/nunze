@@ -5,10 +5,15 @@ const config: ConfigurationFactory = () => {
   return {
     entry: {
       // eslint-disable-next-line @typescript-eslint/camelcase
-      content_scripts: path.join(__dirname, 'src', 'content_scripts/main.ts'),
+      content_global: path.join(__dirname, 'src/content_scripts/global.ts'),
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      content_lodestone: path.join(
+        __dirname,
+        'src/content_scripts/lodestone.ts'
+      ),
     },
     output: {
-      path: path.join(__dirname, 'dist'),
+      path: path.join(__dirname, 'dist/js'),
       filename: '[name].js',
     },
     module: {
