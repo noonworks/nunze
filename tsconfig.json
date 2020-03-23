@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["dom"],
+    "allowJs": false,
+    "sourceMap": false,
+    "strict": true,
+    "types": ["@types/node", "@types/jest"],
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules"]
+}
