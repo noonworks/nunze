@@ -2,6 +2,9 @@
   "name": "nunze_ts",
   "version": "0.0.1",
   "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode=production"
+  },
   "author": "noonworks <noonworks@gmail.com>",
   "license": "MIT",
   "private": true,
