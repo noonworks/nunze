@@ -8,7 +8,7 @@ export interface SaveInventoriesMessage {
 
 export interface SaveInventoriesResponse {
   method: 'Nunze_saveInventories';
-  status: string;
+  status: 'fail' | 'completed' | 'next';
 }
 
 export function isSaveInventoriesResponse(

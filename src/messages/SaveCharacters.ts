@@ -1,19 +1,8 @@
-export interface SavedCharacter {
-  id: string;
-  name: string;
-  world: string;
-  retainers: {
-    [key: string]: {
-      id: string;
-      name: string;
-    };
-  };
-  loadDateTime: number;
-}
+import { CharacterStorageDataData } from '../events/lodestone/character/data';
 
 export interface SaveCharactersMessage {
   method: 'Nunze_saveCharacters';
-  characters: SavedCharacter[];
+  characters: CharacterStorageDataData[];
 }
 
 export interface SaveCharactersResponse {

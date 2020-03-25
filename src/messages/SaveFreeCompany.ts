@@ -1,6 +1,7 @@
 interface SavedFC {
   id: string;
   name: string;
+  world: string;
   loadDateTime: number;
 }
 

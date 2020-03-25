@@ -1,6 +1,6 @@
-import { SavedCharacter } from './SaveCharacters';
+import { CharacterStorageDataData } from '../events/lodestone/character/data';
 
 export interface StartRetainerCrawlersMessage {
   method: 'Nunze_startRetainerCrawler';
-  character: SavedCharacter;
+  character: CharacterStorageDataData;
 }

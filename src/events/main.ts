@@ -2,10 +2,16 @@ import { ResponseSenders, Messages } from '../messages';
 import { init as initMenu } from './menu/index';
 import { NunzeMenu } from './menu/NunzeMenu';
 import { OptionStorage } from './option/storage';
+import {
+  startRetainerCrawler,
+  saveInventoriesInCrawling,
+} from './lodestone/crawler';
+import { CharacterStore } from './lodestone/character/character';
+import { Inventory } from './lodestone/inventory/Inventory';
 
 function onMessage(
   message: Messages,
-  _: chrome.runtime.MessageSender,
+  sender: chrome.runtime.MessageSender,
   sendResponse: ResponseSenders
 ): void {
   switch (message.method) {
@@ -15,6 +21,35 @@ function onMessage(
     case 'Nunze_updateSearchMenu':
       NunzeMenu.instance().updateSearchWord(message.name);
       sendResponse({ method: 'Nunze_updateSearchMenu', succeed: true });
+      break;
+    //
+    // Crawler
+    //
+    case 'Nunze_startRetainerCrawler':
+      startRetainerCrawler(message.character, sender.tab);
+      break;
+    //
+    // Character and Inventory Data methods
+    //
+    case 'Nunze_saveCharacters':
+      CharacterStore.instance().saveCharacters(message.characters);
+      sendResponse({ method: 'Nunze_saveCharacters', succeed: true });
+      break;
+    case 'Nunze_saveInventories':
+      if (message.inCrawling) {
+        const ret = saveInventoriesInCrawling(message.inventories, sender.tab);
+        sendResponse({ method: 'Nunze_saveInventories', status: ret });
+      } else {
+        Inventory.instance().save(message.inventories);
+        sendResponse({ method: 'Nunze_saveInventories', status: 'completed' });
+      }
+      break;
+    //
+    // FC data methods
+    //
+    case 'Nunze_saveFreeCompany':
+      CharacterStore.instance().saveFreeCompany(message.fc);
+      sendResponse({ method: 'Nunze_saveFreeCompany', succeed: true });
       break;
     //
     // Option Data methods
@@ -39,26 +74,6 @@ function onMessage(
 //     case 'Nunze_deleteLoadstoneData':
 //       deleteInventories();
 //       deleteCharacters();
-//       sendResponse({ succeed: true });
-//       break;
-//     case 'Nunze_startRetainerCrawler':
-//       startRetainerCrawler(message.character, sender.tab);
-//       break;
-//     case 'Nunze_saveCharacters':
-//       saveCharacters(message.characters);
-//       sendResponse({ succeed: true });
-//       break;
-//     case 'Nunze_saveInventories':
-//       if (message.inCrawling) {
-//         const ret = saveInventoriesInCrawling(message.inventories, sender.tab);
-//         sendResponse({ status: ret });
-//       } else {
-//         saveInventories(message.inventories);
-//         sendResponse({ succeed: true });
-//       }
-//       break;
-//     case 'Nunze_saveFreeCompany':
-//       saveFreeCompany(message.fc);
 //       sendResponse({ succeed: true });
 //       break;
 //     // Option Data methods

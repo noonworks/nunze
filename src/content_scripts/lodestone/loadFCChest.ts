@@ -9,6 +9,7 @@ export function loadFCChest(meta: LodestoneMetadata): void {
   const fc = {
     id: meta.fc.id,
     name: meta.fc.name,
+    world: meta.character.world,
     loadDateTime: new Date().getTime(),
   };
   const inv = {

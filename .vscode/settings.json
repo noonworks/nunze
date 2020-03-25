@@ -1,9 +1,12 @@
 {
   "cSpell.words": [
     "FFXIV",
+    "colmun",
+    "freecompany",
     "migratable",
     "noonworks",
-    "nunze"
+    "nunze",
+    "worldstatus"
   ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true

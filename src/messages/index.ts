@@ -8,7 +8,10 @@ import { ShowInventorySearchResultMessage } from './ShowInventorySearchResult';
 import { ErrorResponse } from './Error';
 import { GetOptionMessage, GetOptionResponse } from './GetOption';
 import { LoadInventoryMessage } from './LoadInventory';
-import { SaveInventoriesMessage } from './SaveInventories';
+import {
+  SaveInventoriesMessage,
+  SaveInventoriesResponse,
+} from './SaveInventories';
 import {
   SaveCharactersMessage,
   SaveCharactersResponse,
@@ -37,6 +40,7 @@ export type Responses =
   | GetSelectionResponse
   | CopySelectionResponse
   | GetOptionResponse
+  | SaveInventoriesResponse
   | SaveCharactersResponse
   | SaveFreeCompanyResponse;
 
