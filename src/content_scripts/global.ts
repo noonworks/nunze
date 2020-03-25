@@ -127,7 +127,10 @@ function onMessage(
 ): void {
   switch (message.method) {
     case 'Nunze_updateSearchMenu':
-      sendResponse({ selection: _selectedWord });
+      sendResponse({
+        method: 'Nunze_getSelection',
+        selection: _selectedWord,
+      });
       break;
     case 'Nunze_copySelection':
       if (_selectedWord.length > 0) {

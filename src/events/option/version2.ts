@@ -1,5 +1,5 @@
 import { NunzeOptionBase } from './option';
-import { Version1 } from './version1';
+import { Version1, Site } from './version1';
 
 export interface Version2 extends NunzeOptionBase {
   version: 2;
@@ -13,11 +13,7 @@ export interface Version2 extends NunzeOptionBase {
       strictAndFuzzy: boolean;
     };
     search: {
-      sites: {
-        use: boolean;
-        name: string;
-        url: string;
-      }[];
+      sites: Site[];
     };
     mouseover: {
       use: boolean;

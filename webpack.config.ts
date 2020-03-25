@@ -11,6 +11,7 @@ const config: ConfigurationFactory = () => {
         __dirname,
         'src/content_scripts/lodestone.ts'
       ),
+      events: path.join(__dirname, 'src/events/main.ts'),
     },
     output: {
       path: path.join(__dirname, 'dist/js'),

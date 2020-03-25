@@ -10,12 +10,12 @@ export type Messages =
   | CopySelectionMessage
   | ShowInventorySearchResultMessage;
 
-export type MessageCallBack = (response: string) => void;
-
 export type Responses =
   | ErrorResponse
   | GetSelectionResponse
   | CopySelectionResponse;
+
+export type MessageCallBack = (response: Responses) => void;
 export type ResponseSenders = (message: Responses) => void;
 
 export function sendMessage(
@@ -23,4 +23,12 @@ export function sendMessage(
   callback?: MessageCallBack
 ): void {
   chrome.runtime.sendMessage(message, callback);
+}
+
+export function sendMessageToTab(
+  tabId: number,
+  message: Messages,
+  callback?: MessageCallBack
+): void {
+  chrome.tabs.sendMessage(tabId, message, callback);
 }

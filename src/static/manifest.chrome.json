@@ -11,10 +11,10 @@
     "default_title": "Nunze"
   },
 
-  "permissions": [],
+  "permissions": ["contextMenus", "clipboardWrite"],
 
   "background": {
-    "scripts": []
+    "scripts": ["js/events.js"]
   },
 
   "content_scripts": [
