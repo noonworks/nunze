@@ -10,4 +10,5 @@ yarn add -D prettier eslint-config-prettier eslint-plugin-prettier
 yarn add -D lint-staged husky
 yarn add -D jest ts-jest @types/jest
 yarn add -D webextension-polyfill-ts @types/chrome
+yarn add -D npm-run-all rimraf cpx
 ```
