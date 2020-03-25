@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode=production"
+    "build": "run-p build:*",
+    "build:js": "webpack --mode=production",
+    "build:copyHtml": "cpx src/static/**/*.{html,json} dist/",
+    "clean": "rimraf dist/*"
   },
   "author": "noonworks <noonworks@gmail.com>",
   "license": "MIT",
