@@ -12,6 +12,9 @@ const config: ConfigurationFactory = () => {
         'src/content_scripts/lodestone.ts'
       ),
       events: path.join(__dirname, 'src/events/main.ts'),
+      options: path.join(__dirname, 'src/option/main.ts'),
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      options_sub: path.join(__dirname, 'src/option/sub.ts'),
     },
     output: {
       path: path.join(__dirname, 'dist/js'),
