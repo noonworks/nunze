@@ -1,6 +1,7 @@
 import { ResponseSenders, Messages } from '../messages';
 import { init as initMenu } from './menu/index';
 import { NunzeMenu } from './menu/NunzeMenu';
+import { OptionStorage } from './option/storage';
 
 function onMessage(
   message: Messages,
@@ -15,6 +16,18 @@ function onMessage(
       NunzeMenu.instance().updateSearchWord(message.name);
       sendResponse({ method: 'Nunze_updateSearchMenu', succeed: true });
       break;
+    //
+    // Option Data methods
+    //
+    case 'Nunze_getOption':
+      sendResponse({
+        method: 'Nunze_getOption',
+        opt: OptionStorage.instance().load(),
+      });
+      break;
+    //
+    // Error
+    //
     default:
       sendResponse({ error: 'Method [' + message.method + '] is not found.' });
       break;
@@ -49,9 +62,6 @@ function onMessage(
 //       sendResponse({ succeed: true });
 //       break;
 //     // Option Data methods
-//     case 'Nunze_getOption':
-//       sendResponse({ opt: getOption() });
-//       break;
 //     case 'Nunze_resetOption':
 //       sendResponse({ opt: resetOption() });
 //       break;
