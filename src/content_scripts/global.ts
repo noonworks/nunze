@@ -74,22 +74,32 @@ function getSelection(): string | null {
   return s.toString();
 }
 
+function getTagText(target: HTMLElement): string {
+  if (target.tagName && target.tagName.toLowerCase() == 'a')
+    return target.innerText;
+  const style = getComputedStyle(target, 'hover');
+  const cursor = style.cursor.toLowerCase();
+  if (cursor === 'pointer') {
+    const str = target.innerText;
+    if (str && str.length <= 20) return str;
+  }
+  return '';
+}
+
 //
 // Get link text
 //
-const THROTTLE_HOVER_TIME = 500;
+const THROTTLE_HOVER_TIME = 100;
 let _throttleHoverLinkTimer = 0;
 function throttleHoverLink(ev: MouseEvent | Event): void {
   if (new Date().getTime() - _throttleHoverLinkTimer <= THROTTLE_HOVER_TIME)
     return;
   if (!ev.target) return;
-  const target = ev.target as HTMLElement;
-  if (target.tagName && target.tagName.toLowerCase() == 'a') {
-    const selection = getSelection();
-    if (!selection || selection.length == 0) {
-      changeSelectionWord(target.innerText);
-    }
-  }
+  const selection = getSelection();
+  if (selection && selection.length > 0) return;
+  const str = getTagText(ev.target as HTMLElement);
+  if (str.length === 0) return;
+  changeSelectionWord(str);
   _throttleHoverLinkTimer = new Date().getTime();
 }
 
