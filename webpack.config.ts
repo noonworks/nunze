@@ -1,5 +1,6 @@
 import { ConfigurationFactory } from 'webpack';
 import path from 'path';
+import { VueLoaderPlugin } from 'vue-loader';
 
 const config: ConfigurationFactory = () => {
   return {
@@ -23,16 +24,24 @@ const config: ConfigurationFactory = () => {
     module: {
       rules: [
         {
-          test: /.ts$/,
-          use: 'ts-loader',
+          test: /\.ts$/,
+          loader: 'ts-loader',
+          exclude: /node_modules/,
+          options: {
+            appendTsSuffixTo: [/\.vue$/],
+          },
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
           exclude: '/node_modules/',
         },
       ],
     },
     resolve: {
-      extensions: ['.ts', '.js'],
+      extensions: ['.ts', '.js', '.vue'],
     },
-    plugins: [],
+    plugins: [new VueLoaderPlugin()],
     optimization: {
       minimize: false,
     },
