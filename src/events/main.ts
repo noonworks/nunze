@@ -1,5 +1,6 @@
 import { ResponseSenders, Messages } from '../messages';
 import { init as initMenu } from './menu/index';
+import { NunzeMenu } from './menu/NunzeMenu';
 
 function onMessage(
   message: Messages,
@@ -7,6 +8,13 @@ function onMessage(
   sendResponse: ResponseSenders
 ): void {
   switch (message.method) {
+    //
+    // Context Menu methods
+    //
+    case 'Nunze_updateSearchMenu':
+      NunzeMenu.instance().updateSearchWord(message.name);
+      sendResponse({ method: 'Nunze_updateSearchMenu', succeed: true });
+      break;
     default:
       sendResponse({ error: 'Method [' + message.method + '] is not found.' });
       break;
@@ -49,15 +57,6 @@ function onMessage(
 //       break;
 //     case 'Nunze_saveOptionData':
 //       saveOptionData(message.opt_data);
-//       sendResponse({ succeed: true });
-//       break;
-//     // Context Menu methods
-//     case 'Nunze_updateSearchMenu':
-//       updateSearchMenu(message.name);
-//       sendResponse({ succeed: true });
-//       break;
-//     case 'Nunze_updateAddStackMenu':
-//       updateAddStackMenu(message.name);
 //       sendResponse({ succeed: true });
 //       break;
 //   }

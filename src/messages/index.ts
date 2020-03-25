@@ -1,4 +1,7 @@
-import { UpdateSearchMenuMessage } from './UpdateSearchMenu';
+import {
+  UpdateSearchMenuMessage,
+  UpdateSearchMenuResponse,
+} from './UpdateSearchMenu';
 import { GetSelectionMessage, GetSelectionResponse } from './GetSelection';
 import { CopySelectionMessage, CopySelectionResponse } from './CopySelection';
 import { ShowInventorySearchResultMessage } from './ShowInventorySearchResult';
@@ -12,6 +15,7 @@ export type Messages =
 
 export type Responses =
   | ErrorResponse
+  | UpdateSearchMenuResponse
   | GetSelectionResponse
   | CopySelectionResponse;
 
