@@ -11,7 +11,7 @@
     "default_title": "Nunze"
   },
 
-  "permissions": ["contextMenus", "clipboardWrite"],
+  "permissions": ["contextMenus", "clipboardWrite", "tabs"],
 
   "background": {
     "scripts": ["js/events.js"]

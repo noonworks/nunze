@@ -134,9 +134,9 @@ function onMessage(
   message: Messages,
   _: chrome.runtime.MessageSender,
   sendResponse: ResponseSenders
-): void {
+): boolean {
   switch (message.method) {
-    case 'Nunze_updateSearchMenu':
+    case 'Nunze_getSelection':
       sendResponse({
         method: 'Nunze_getSelection',
         selection: _selectedWord,
@@ -160,6 +160,7 @@ function onMessage(
     default:
       break;
   }
+  return true;
 }
 
 function onMouseUp(ev: MouseEvent): void {
