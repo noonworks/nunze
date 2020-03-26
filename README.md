@@ -12,4 +12,5 @@ yarn add -D jest ts-jest @types/jest
 yarn add -D webextension-polyfill-ts @types/chrome
 yarn add -D npm-run-all rimraf cpx
 yarn add -D vue vue-loader vue-template-compiler
+yarn add -D  css-loader vue-style-loader
 ```

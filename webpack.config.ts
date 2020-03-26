@@ -36,6 +36,19 @@ const config: ConfigurationFactory = () => {
           loader: 'vue-loader',
           exclude: '/node_modules/',
         },
+
+        {
+          test: /\.css$/,
+          loader: [
+            'vue-style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+              },
+            },
+          ],
+        },
       ],
     },
     resolve: {
