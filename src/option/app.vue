@@ -16,7 +16,7 @@
 
     <section id="sec_search">
       <h1>検索サイト</h1>
-      <div class="description">
+      <BaseDescription>
         <p>右クリックメニューに表示される検索サイトを管理できます。</p>
         <ul>
           <li>
@@ -30,7 +30,7 @@
             入力内容にエラーがある検索サイトは、メニューに表示されません。
           </li>
         </ul>
-      </div>
+      </BaseDescription>
       <div class="options">
         <transition-group name="search-sites" tag="ul">
           <li v-for="(site, index) in data.search.sites" :key="site">
@@ -82,7 +82,7 @@
           <input type="checkbox" v-model="data.lodestone.use" />
           LodeStoneから情報を読み取る
         </label>
-        <div class="description">
+        <BaseDescription>
           <p>表示中のLodeStoneページから情報を読み取ります。</p>
           <ul>
             <li>
@@ -100,16 +100,16 @@
               読み取った情報はこのブラウザに保存されます。別のアプリおよびサーバーへの保存・送信は行われません。
             </li>
           </ul>
-        </div>
-        <div class="description">
+        </BaseDescription>
+        <BaseDescription>
           <p>
             LodeStoneからの情報読み取りを有効にすると、以下の機能が使用できます。
           </p>
           <ul>
             <li>リテイナーの所持品からのアイテム検索</li>
           </ul>
-        </div>
-        <div class="description">
+        </BaseDescription>
+        <BaseDescription>
           <p>読み取る情報は以下の通りです。</p>
           <ul>
             <li>
@@ -122,16 +122,16 @@
               リテイナーの所持品一覧（リテイナーの所持品からアイテム検索を行うために使用します）
             </li>
           </ul>
-        </div>
-        <div class="description">
+        </BaseDescription>
+        <BaseDescription>
           <p>
             機能の使用を止めるときには、以下のボタンでデータを削除できます。
           </p>
           <button id="deletelodestonedata">
             LodeStoneから読み取った情報を削除する
           </button>
-        </div>
-        <div class="description">
+        </BaseDescription>
+        <BaseDescription>
           <h4>読み取り方法</h4>
           <ol>
             <li>
@@ -160,7 +160,7 @@
               メニューをクリックし、画面の指示に従って読み取りを行います。
             </li>
           </ol>
-        </div>
+        </BaseDescription>
         <fieldset class="subgroup" :disabled="!data.lodestone.use">
           <h2>
             リテイナー所持品検索の条件
@@ -176,54 +176,54 @@
             <input type="checkbox" v-model="data.lodestone.part" />
             部分一致検索を有効にする
           </label>
-          <div class="description">
+          <BaseDescription>
             <p>アイテム名の部分一致での検索を有効にします。</p>
             <p>
               （例：「小麦」で検索した際に、「小麦粉」「ハイランド小麦」等の候補も表示される。）
             </p>
-          </div>
+          </BaseDescription>
           <fieldset class="subgroup" :disabled="!data.lodestone.part">
             <label>
               <input type="checkbox" v-model="data.lodestone.strictAndPart" />
               完全一致が見つかっても、部分一致も表示する（部分一致検索有効時のみ）
             </label>
-            <div class="description">
+            <BaseDescription>
               <p>
                 チェックを入れないと、完全一致アイテムが見つかった時点で検索を中止します。
               </p>
               <p>
                 （例：「小麦」が見つかった場合、「小麦粉」「ハイランド小麦」等は候補に表示されない。）
               </p>
-            </div>
-            <div class="description">
+            </BaseDescription>
+            <BaseDescription>
               <p>
                 チェックを入れると、完全一致アイテムが見つかった場合でも、部分一致検索を実行します。
               </p>
               <p>
                 （例：「小麦」が見つかった場合でも、「小麦粉」「ハイランド小麦」等も候補に表示される。）
               </p>
-            </div>
+            </BaseDescription>
           </fieldset>
           <label>
             <input type="checkbox" v-model="data.lodestone.fuzzy" />
             あいまい検索を有効にする
           </label>
-          <div class="description">
+          <BaseDescription>
             <p>一部の文字の全角／半角の違い等を無視して検索します。</p>
-          </div>
+          </BaseDescription>
           <fieldset class="subgroup" :disabled="!data.lodestone.fuzzy">
             <label>
               <input type="checkbox" v-model="data.lodestone.strictAndFuzzy" />
               完全一致が見つかっても、あいまい検索結果も表示する（あいまい検索有効時のみ）
             </label>
-            <div class="description">
+            <BaseDescription>
               <p>
                 チェックを入れないと、完全一致アイテムが見つかった時点で検索を中止します。
               </p>
               <p>
                 チェックを入れると、完全一致アイテムが見つかった場合でも、あいまい検索を実行します。
               </p>
-            </div>
+            </BaseDescription>
           </fieldset>
         </fieldset>
       </div>
@@ -236,8 +236,13 @@ import Vue from 'vue';
 import { DEFAULT_OPTIONS } from '../events/option';
 import { sendSaveOptionDataRequest, autoSave } from './common';
 import { Version2 } from '../events/option/version2';
+import BaseDescription from './components/BaseDescription.vue';
 
 export default Vue.extend({
+  components: {
+    BaseDescription,
+  },
+
   data: () => {
     return DEFAULT_OPTIONS;
   },
