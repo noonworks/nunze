@@ -71,3 +71,22 @@ iframe {
   padding: 0;
   display: none;
 }
+fieldset.error {
+  background-color: #ffcece;
+}
+label.error {
+  color: #c10101;
+  font-weight: bold;
+}
+fieldset.disabled {
+  background-color: #ebebe4;
+}
+fieldset.disabled > label,
+fieldset:disabled * {
+  color: #888;
+}
+fieldset.subgroup {
+  margin: 0;
+  padding: 0;
+  border: none;
+}

@@ -1,17 +1,21 @@
 import { NunzeOptionBase } from './option';
-import { Version1, Site } from './version1';
+import { Version1, Site as SiteV1 } from './version1';
+
+export type Site = SiteV1;
+
+export interface LodeStone {
+  use: boolean;
+  expireDate: number;
+  part: boolean;
+  strictAndPart: boolean;
+  fuzzy: boolean;
+  strictAndFuzzy: boolean;
+}
 
 export interface Version2 extends NunzeOptionBase {
   version: 2;
   data: {
-    lodestone: {
-      use: boolean;
-      expireDate: number;
-      part: boolean;
-      strictAndPart: boolean;
-      fuzzy: boolean;
-      strictAndFuzzy: boolean;
-    };
+    lodestone: LodeStone;
     search: {
       sites: Site[];
     };
