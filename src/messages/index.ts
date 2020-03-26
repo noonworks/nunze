@@ -21,6 +21,9 @@ import {
   SaveFreeCompanyMessage,
   SaveFreeCompanyResponse,
 } from './SaveFreeCompany';
+import { SaveOptionDataMessage } from './SaveOptionData';
+import { ResetOptionMessage } from './ResetOption';
+import { DeleteLoadstoneDataMessage } from './DeleteLoadstoneData';
 
 export type Messages =
   | UpdateSearchMenuMessage
@@ -32,7 +35,10 @@ export type Messages =
   | SaveInventoriesMessage
   | SaveCharactersMessage
   | StartRetainerCrawlersMessage
-  | SaveFreeCompanyMessage;
+  | SaveFreeCompanyMessage
+  | SaveOptionDataMessage
+  | ResetOptionMessage
+  | DeleteLoadstoneDataMessage;
 
 export type Responses =
   | ErrorResponse

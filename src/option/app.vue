@@ -234,6 +234,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { DEFAULT_OPTIONS } from '../events/option';
+import { sendSaveOptionDataRequest, autoSave } from './common';
+import { Version2 } from '../events/option/version2';
 
 export default Vue.extend({
   data: () => {
@@ -289,6 +291,15 @@ export default Vue.extend({
         name: '新しい検索サイト',
         url: '',
       });
+    },
+  },
+
+  watch: {
+    data: {
+      handler: function (): void {
+        autoSave(this.$data as Version2);
+      },
+      deep: true,
     },
   },
 });
