@@ -18,7 +18,7 @@
     </BaseDescription>
     <div :class="$style.sites">
       <transition-group name="search-sites" tag="ul">
-        <li v-for="(site, index) in value" :key="site">
+        <li v-for="(site, index) in sites" :key="site.key" :id="site.key">
           <fieldset
             :class="{
               [$style.searchSite]: true,
@@ -30,8 +30,10 @@
               <label>
                 <input
                   type="checkbox"
-                  :value="site.use"
-                  @input="(use) => updateSite({ use }, index)"
+                  :checked="site.use"
+                  @change="
+                    (ev) => updateSite({ use: ev.target.checked }, index)
+                  "
                 />
                 使用する
               </label>
@@ -43,7 +45,7 @@
                 type="text"
                 :disabled="!site.use"
                 :value="site.name"
-                @input="(name) => updateSite({ name }, index)"
+                @input="(ev) => updateSite({ name: ev.value }, index)"
               />
             </label>
             <br />
@@ -53,7 +55,7 @@
                 type="url"
                 :disabled="!site.use"
                 :value="site.url"
-                @input="(url) => updateSite({ url }, index)"
+                @input="(ev) => updateSite({ url: ev.value }, index)"
               />
             </label>
             <br />
@@ -62,7 +64,7 @@
             </button>
             <button
               @click="downSearchSite(index)"
-              :disabled="(index == value.length - 1)"
+              :disabled="(index == sites.length - 1)"
             >
               ▼ 下へ移動 ▼
             </button>
@@ -80,9 +82,17 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import BaseDescription from './BaseDescription.vue';
 import { Site } from '../../events/option/version2';
 
+export interface SearchSite extends Site {
+  key: string;
+}
+
 @Component({ components: { BaseDescription } })
 export default class SearchSites extends Vue {
-  @Prop({ type: Object, required: true }) readonly value!: Site[];
+  @Prop({ type: Array, required: true }) readonly value!: SearchSite[];
+
+  public get sites(): Site[] {
+    return this.value;
+  }
 
   public get validSiteName(): boolean[] {
     return this.value.map((s) => s.name.length > 0);
@@ -98,18 +108,17 @@ export default class SearchSites extends Vue {
     });
   }
 
-  public updateSite(site: Site, index: number): void {
+  public updateSite(diff: Partial<Site>, index: number): void {
     const sites = [
       ...this.value.slice(0, index),
-      site,
+      { ...this.value[index], ...diff },
       ...this.value.slice(index + 1),
     ];
     this.$emit('input', sites);
   }
 
   public upSearchSite(index: number): void {
-    if (index <= 0) return;
-    if (index > this.value.length - 1) return;
+    if (index < 1 || index >= this.value.length) return;
     const sites = [
       ...this.value.slice(0, index - 1),
       this.value[index],
@@ -120,8 +129,7 @@ export default class SearchSites extends Vue {
   }
 
   public downSearchSite(index: number): void {
-    if (index < 0) return;
-    if (index >= this.value.length - 1) return;
+    if (index < 0 || index >= this.value.length - 1) return;
     const sites = [
       ...this.value.slice(0, index),
       this.value[index + 1],
@@ -132,6 +140,7 @@ export default class SearchSites extends Vue {
   }
 
   public removeSearchSite(index: number): void {
+    if (index < 0 || index >= this.value.length) return;
     const sites = [
       ...this.value.slice(0, index),
       ...this.value.slice(index + 1),
@@ -146,6 +155,7 @@ export default class SearchSites extends Vue {
         use: true,
         name: '新しい検索サイト',
         url: '',
+        key: `${this.value.length}_new_` + new Date().getTime(),
       },
     ];
     this.$emit('input', sites);
@@ -153,25 +163,6 @@ export default class SearchSites extends Vue {
 }
 </script>
 
-<style>
-.search-sites-move {
-  transition: transform 0.2s;
-}
-.search-sites-enter-active {
-  transition: all 0.3s;
-}
-.search-sites-enter {
-  opacity: 0;
-  transform: scaleX(0) translateX(50%);
-}
-.search-sites-leave-active {
-  transition: all 0.2s;
-}
-.search-sites-leave-to {
-  opacity: 0;
-  transform: scaleX(0) translateX(50%);
-}
-</style>
 <style module>
 .sites ul {
   margin: 0;

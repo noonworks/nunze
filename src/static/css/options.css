@@ -90,3 +90,20 @@ fieldset.subgroup {
   padding: 0;
   border: none;
 }
+.search-sites-move {
+  transition: transform 0.2s;
+}
+.search-sites-enter-active {
+  transition: all 0.3s;
+}
+.search-sites-enter {
+  opacity: 0;
+  transform: scaleX(0) translateX(50%);
+}
+.search-sites-leave-active {
+  transition: all 0.2s;
+}
+.search-sites-leave-to {
+  opacity: 0;
+  transform: scaleX(0) translateX(50%);
+}
