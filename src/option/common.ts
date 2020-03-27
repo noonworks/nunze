@@ -2,15 +2,42 @@ import { Version2 } from '../events/option/version2';
 import { OptionMessages, OptionRequests } from './messages';
 
 //
+// Vue instance
+//
+export interface AppInterface extends Vue {
+  startLoading(): void;
+  startSaving(): void;
+  hideSpinner(): void;
+  showLoadError(): void;
+  hideLoadError(): void;
+}
+let vm: AppInterface | null = null;
+export function mountVue(app: AppInterface): void {
+  vm = app;
+  vm.$mount('#app');
+}
+
+//
+// toggle loader
+//
+export function hideSpinner(): void {
+  if (vm) vm.hideSpinner();
+}
+export function startLoading(): void {
+  if (vm) vm.startLoading();
+}
+export function startSaving(): void {
+  if (vm) vm.startSaving();
+}
+
+//
 // load error
 //
-let loadErrorBox: HTMLElement | null = null;
-document.addEventListener('DOMContentLoaded', () => {
-  loadErrorBox = document.getElementById('load-error');
-});
-export function setLoadError(enable: boolean): void {
-  if (!loadErrorBox) return;
-  loadErrorBox.style.display = enable ? 'block' : 'none';
+export function showLoadError(): void {
+  if (vm) vm.showLoadError();
+}
+export function hideLoadError(): void {
+  if (vm) vm.hideLoadError();
 }
 
 //
@@ -61,7 +88,7 @@ export function postOptionMessage(
 //
 export function sendSaveOptionDataRequest(data: Version2): void {
   if (!subWindow) return;
-  // showLoader(true);
+  startSaving();
   console.log(JSON.stringify(data));
   postOptionMessage(subWindow, {
     method: 'Nunze_OPTIONS_SAVE_OPTION_DATA',

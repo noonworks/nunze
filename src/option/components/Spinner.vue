@@ -1,5 +1,5 @@
 <template>
-  <div :class="[$style.loader, shown ? '' : 'hide']">
+  <div :class="[$style.loader, shown ? '' : $style.hide]">
     <div :class="$style.spinner"></div>
     <span>{{ loading ? '読み込み中...' : '保存中...' }}</span>
   </div>
@@ -10,11 +10,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export default class Spinner extends Vue {
-  @Prop({ type: Boolean, required: false, default: false })
-  shown!: boolean;
-
-  @Prop({ type: Boolean, required: false, default: true })
-  loading!: boolean;
+  @Prop({ type: Boolean, required: true }) readonly shown!: boolean;
+  @Prop({ type: Boolean, required: true }) readonly loading!: boolean;
 }
 </script>
 

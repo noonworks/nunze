@@ -3,16 +3,20 @@ import {
   splitData,
   subWindow,
   postOptionMessage,
-  setLoadError,
+  mountVue,
+  startLoading,
+  hideSpinner,
+  hideLoadError,
+  showLoadError,
 } from './common';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const app = new App();
-  app.$mount('#app');
+  mountVue(new App());
+  startLoading();
 });
 
 function update(data: string): void {
-  setLoadError(false);
+  hideLoadError();
   try {
     const opt = JSON.parse(data);
     // if (vm == null) {
@@ -23,12 +27,8 @@ function update(data: string): void {
     // }
   } catch (e) {
     console.log(e);
-    setLoadError(true);
+    showLoadError();
   }
-}
-
-function hideLoader(): void {
-  // TODO
 }
 
 //
@@ -50,7 +50,7 @@ window.addEventListener(
       case 'Nunze_OPTIONS_SUB_FIRST_LOADED':
         // on completed first-load
         update(msg.data);
-        hideLoader();
+        hideSpinner();
         break;
       case 'Nunze_LODESTONE_DATA_DELETED':
         // on loadstone data deleted
@@ -58,12 +58,12 @@ window.addEventListener(
         break;
       case 'Nunze_OPTIONS_SUB_SAVED':
         // on data saved
-        hideLoader();
+        hideSpinner();
         break;
       case 'Nunze_OPTIONS_SUB_RESET':
         // on data reset
         update(msg.data);
-        hideLoader();
+        hideSpinner();
         break;
     }
     return true;

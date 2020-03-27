@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Spinner :shown="true" :loading="true"></Spinner>
+    <Spinner :shown="showSpinner" :loading="loading"></Spinner>
 
-    <InitializeButton></InitializeButton>
+    <InitializeButton :error="loadError"></InitializeButton>
 
     <SearchSites v-model="sites"></SearchSites>
 
@@ -19,7 +19,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { DEFAULT_OPTIONS } from '../events/option';
-import { sendSaveOptionDataRequest, autoSave } from './common';
+import { sendSaveOptionDataRequest, autoSave, AppInterface } from './common';
 import { Version2, Site } from '../events/option/version2';
 import InitializeButton from './components/InitializeButton.vue';
 import LodestoneUse from './components/LodestoneUse.vue';
@@ -36,8 +36,33 @@ import Spinner from './components/Spinner.vue';
     Spinner,
   },
 })
-export default class App extends Vue {
+export default class App extends Vue implements AppInterface {
   opt: Version2 = DEFAULT_OPTIONS;
+  loading: boolean = false;
+  showSpinner: boolean = false;
+  loadError: boolean = false;
+
+  public startLoading(): void {
+    this.loading = true;
+    this.showSpinner = true;
+  }
+
+  public startSaving(): void {
+    this.loading = false;
+    this.showSpinner = true;
+  }
+
+  public hideSpinner(): void {
+    this.showSpinner = false;
+  }
+
+  public showLoadError(): void {
+    this.loadError = true;
+  }
+
+  public hideLoadError(): void {
+    this.loadError = false;
+  }
 
   sitesCache: SearchSite[] = [];
   public get sites(): SearchSite[] {

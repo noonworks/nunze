@@ -15,8 +15,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export default class InitializeButton extends Vue {
-  @Prop({ type: Boolean, required: false, default: false })
-  error!: boolean;
+  @Prop({ type: Boolean, required: true }) readonly error!: boolean;
 
   @Prop({ type: Boolean, required: false, default: false })
   disabled!: boolean;
@@ -25,7 +24,6 @@ export default class InitializeButton extends Vue {
 
 <style module>
 .error {
-  display: none;
   margin: 1em 0;
   padding: 1em;
   background-color: #ffcece;
@@ -35,6 +33,5 @@ export default class InitializeButton extends Vue {
 .error p {
   margin: 0;
   color: #c10101;
-  font-weight: bold;
 }
 </style>
