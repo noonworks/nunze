@@ -10,11 +10,15 @@ export interface AppInterface extends Vue {
   hideSpinner(): void;
   showLoadError(): void;
   hideLoadError(): void;
+  updateData(opt: Version2): void;
 }
 let vm: AppInterface | null = null;
 export function mountVue(app: AppInterface): void {
   vm = app;
   vm.$mount('#app');
+}
+export function updateData(opt: Version2): void {
+  if (vm) vm.updateData(opt);
 }
 
 //
@@ -89,7 +93,6 @@ export function postOptionMessage(
 export function sendSaveOptionDataRequest(data: Version2): void {
   if (!subWindow) return;
   startSaving();
-  console.log(JSON.stringify(data));
   postOptionMessage(subWindow, {
     method: 'Nunze_OPTIONS_SAVE_OPTION_DATA',
     data: JSON.stringify(data),

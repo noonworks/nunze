@@ -8,6 +8,7 @@ import {
   hideSpinner,
   hideLoadError,
   showLoadError,
+  updateData,
 } from './common';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,12 +20,7 @@ function update(data: string): void {
   hideLoadError();
   try {
     const opt = JSON.parse(data);
-    // if (vm == null) {
-    //   createVue(opt);
-    // } else {
-    //   vm.data = opt.data;
-    //   vm.$forceUpdate();
-    // }
+    updateData(opt);
   } catch (e) {
     console.log(e);
     showLoadError();

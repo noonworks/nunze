@@ -64,6 +64,13 @@ export default class App extends Vue implements AppInterface {
     this.loadError = false;
   }
 
+  ignoreSaveCount = 0;
+  public updateData(opt: Version2): void {
+    this.ignoreSaveCount = 1;
+    this.opt = opt;
+    this.sitesCache = [];
+  }
+
   sitesCache: SearchSite[] = [];
   public get sites(): SearchSite[] {
     if (this.sitesCache.length === 0) {
@@ -85,6 +92,10 @@ export default class App extends Vue implements AppInterface {
 
   @Watch('opt', { deep: true })
   onChange() {
+    if (this.ignoreSaveCount > 0) {
+      this.ignoreSaveCount--;
+      return;
+    }
     autoSave(this.$data.opt as Version2);
   }
 }
