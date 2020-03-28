@@ -1,4 +1,4 @@
-interface SavedFC {
+export interface SavedFC {
   id: string;
   name: string;
   world: string;

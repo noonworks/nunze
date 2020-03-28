@@ -1,7 +1,9 @@
 import { LodestoneMetadata } from './loadMetadata';
-import { sendMessage } from '../../messages';
 import { failAlert } from './util';
-import { isSaveCharactersResponse } from '../../messages/SaveCharacters';
+import {
+  sendSaveCharactersRequest,
+  sendStartRetainerCrawlerRequest,
+} from '../requests';
 
 interface Retainer {
   id: string;
@@ -35,24 +37,11 @@ export function loadInventories(meta: LodestoneMetadata): void {
     retainers: getRetainers(),
     loadDateTime: new Date().getTime(),
   };
-  sendMessage(
-    {
-      method: 'Nunze_saveCharacters',
-      characters: [character],
-    },
-    (response) => {
-      if (
-        !response ||
-        !isSaveCharactersResponse(response) ||
-        !response.succeed
-      ) {
-        failAlert('キャラクター情報の保存');
-        return;
-      }
-      sendMessage({
-        method: 'Nunze_startRetainerCrawler',
-        character: character,
-      });
-    }
-  );
+  sendSaveCharactersRequest([character])
+    .then(() => {
+      sendStartRetainerCrawlerRequest(character);
+    })
+    .catch(() => {
+      failAlert('キャラクター情報の保存');
+    });
 }

@@ -1,9 +1,10 @@
 import { LodestoneMetadata } from './loadMetadata';
-import { sendMessage } from '../../messages';
 import { loadBaggageItems } from './loadBaggageItems';
 import { failAlert } from './util';
-import { isSaveInventoriesResponse } from '../../messages/SaveInventories';
-import { isSaveFreeCompanyResponse } from '../../messages/SaveFreeCompany';
+import {
+  sendSaveFreeCompanyRequest,
+  sendSaveInventoriesRequest,
+} from '../requests';
 
 export function loadFCChest(meta: LodestoneMetadata): void {
   const fc = {
@@ -19,38 +20,18 @@ export function loadFCChest(meta: LodestoneMetadata): void {
     items: loadBaggageItems(),
   };
   // FC情報の保存
-  sendMessage(
-    {
-      method: 'Nunze_saveFreeCompany',
-      fc: fc,
-    },
-    (response) => {
-      if (
-        !response ||
-        !isSaveFreeCompanyResponse(response) ||
-        !response.succeed
-      ) {
-        failAlert('FC情報の保存');
-        return;
-      }
+  sendSaveFreeCompanyRequest(fc)
+    .then(() => {
       // FCチェスト情報の保存
-      sendMessage(
-        {
-          method: 'Nunze_saveInventories',
-          inventories: [inv],
-          inCrawling: false,
-        },
-        (response) => {
-          if (
-            !response ||
-            !isSaveInventoriesResponse(response) ||
-            response.status == 'fail'
-          ) {
-            failAlert('FCチェスト情報の保存');
-          } else if (response.status == 'completed')
-            alert('[Nunze]FCチェスト情報を保存しました。');
-        }
-      );
-    }
-  );
+      sendSaveInventoriesRequest([inv], false)
+        .then(() => {
+          alert('[Nunze]FCチェスト情報を保存しました。');
+        })
+        .catch(() => {
+          failAlert('FCチェスト情報の保存');
+        });
+    })
+    .catch(() => {
+      failAlert('FC情報の保存');
+    });
 }

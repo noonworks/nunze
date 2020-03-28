@@ -5,7 +5,7 @@ import { isGetSelectionResponse } from '../messages/messages/GetSelection';
 import { EventToContentMessage } from '../messages/EventToContentMessages';
 
 //
-// send message to parent window
+// send message to content script
 //
 const sendToContent: (
   tabId: number,

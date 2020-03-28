@@ -1,13 +1,9 @@
-// content script for lodestone pages.
-
-import { sendMessage, Messages } from '../messages';
-import { isGetOptionResponse } from '../messages/GetOption';
 import { loadBaggageItems } from './lodestone/loadBaggageItems';
 import { InventoryData } from '../events/lodestone/inventory/data';
-import { isSaveInventoriesResponse } from '../messages/SaveInventories';
 import { loadMetadata } from './lodestone/loadMetadata';
 import { initMenu } from './lodestone/menu';
 import { failAlert } from './lodestone/util';
+import { sendSaveInventoriesRequest, sendGetOptionRequest } from './requests';
 
 //
 // Load retainer inventory
@@ -31,24 +27,13 @@ function onMessage(message: Messages): boolean {
       failAlert('リテイナー所持品情報の取得');
       return true;
     }
-    sendMessage(
-      {
-        method: 'Nunze_saveInventories',
-        inventories: [inv],
-        inCrawling: true,
-      },
-      (response) => {
-        if (
-          !response ||
-          !isSaveInventoriesResponse(response) ||
-          response.status == 'fail'
-        ) {
-          failAlert('リテイナー所持品情報の保存');
-        } else if (response.status == 'completed') {
-          alert('[Nunze]リテイナー所持品情報を保存しました。');
-        }
-      }
-    );
+    sendSaveInventoriesRequest([inv], true)
+      .then(() => {
+        alert('[Nunze]リテイナー所持品情報を保存しました。');
+      })
+      .catch(() => {
+        failAlert('リテイナー所持品情報の保存');
+      });
   }
   return true;
 }
@@ -61,8 +46,7 @@ function doInit(): void {
 
 function init(): void {
   console.log('Nunze script lodestone loaded.');
-  sendMessage({ method: 'Nunze_getOption' }, (response) => {
-    if (!response || !isGetOptionResponse(response)) return;
+  sendGetOptionRequest().then((response) => {
     if (response.opt.data.lodestone.use) doInit();
   });
 }

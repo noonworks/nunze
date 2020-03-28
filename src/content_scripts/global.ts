@@ -1,6 +1,4 @@
-// content script for all web pages.
-
-import { sendMessage, Messages, ResponseSenders } from '../messages';
+import { sendUpdateSearchMenu } from './requests';
 
 function copyText(str: string): void {
   const textarea = document.createElement('textarea');
@@ -59,10 +57,7 @@ let _selectedWord = '';
 function changeSelectionWord(word: string): void {
   if (word.length == 0) return;
   _selectedWord = word;
-  sendMessage({
-    method: 'Nunze_updateSearchMenu',
-    name: _selectedWord,
-  });
+  sendUpdateSearchMenu(_selectedWord);
 }
 
 //
