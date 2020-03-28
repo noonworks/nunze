@@ -19,6 +19,10 @@ import {
   UpdateSearchMenuMessage,
   UpdateSearchMenuResponse,
 } from './messages/UpdateSearchMenu';
+import {
+  SaveOptionDataMessage,
+  SaveOptionDataResponse,
+} from './messages/SaveOptionData';
 
 type LodestoneToEventMessages =
   | GetOptionMessage
@@ -33,8 +37,8 @@ type LodestoneToEventResponses =
   | SaveCharactersResponse
   | SaveFreeCompanyResponse;
 
-type GlobalToEventMessages = UpdateSearchMenuMessage;
-type GlobalToEventResponses = UpdateSearchMenuResponse;
+type GlobalToEventMessages = UpdateSearchMenuMessage | SaveOptionDataMessage;
+type GlobalToEventResponses = UpdateSearchMenuResponse | SaveOptionDataResponse;
 
 export type ContentToEventMessage =
   | LodestoneToEventMessages

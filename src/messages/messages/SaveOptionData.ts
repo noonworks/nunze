@@ -4,3 +4,8 @@ export interface SaveOptionDataMessage {
   method: 'Nunze_saveOptionData';
   data: Version2;
 }
+
+export interface SaveOptionDataResponse {
+  method: 'Nunze_saveOptionData';
+  succeed: boolean;
+}

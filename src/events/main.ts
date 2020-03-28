@@ -64,6 +64,10 @@ function onMessage(
         opt: OptionStorage.instance().load(),
       });
       break;
+    case 'Nunze_saveOptionData':
+      OptionStorage.instance().save(message.data);
+      sendResponse({ method: 'Nunze_saveOptionData', succeed: true });
+      break;
   }
   return true;
 }
@@ -78,10 +82,6 @@ function onMessage(
 //     // Option Data methods
 //     case 'Nunze_resetOption':
 //       sendResponse({ opt: resetOption() });
-//       break;
-//     case 'Nunze_saveOptionData':
-//       saveOptionData(message.opt_data);
-//       sendResponse({ succeed: true });
 //       break;
 //   }
 // });
