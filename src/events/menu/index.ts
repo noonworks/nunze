@@ -1,7 +1,9 @@
 import { NunzeMenu } from './NunzeMenu';
-import { searchWithSite } from './SearchWithSite';
-import { searchInventory } from './SearchInventory';
-import { sendMessageToTab } from '../../messages';
+import {
+  sendSearchWithSiteRequest,
+  sendCopyRequest,
+  sendSearchInventoryRequest,
+} from './requests';
 
 function onMenuClick(
   info: chrome.contextMenus.OnClickData,
@@ -9,11 +11,11 @@ function onMenuClick(
 ): void {
   switch (info.menuItemId) {
     case 'FD-item':
-      if (tab) searchInventory(tab);
+      if (tab) sendSearchInventoryRequest(tab);
       return;
     case 'CP-word':
       if (!tab || typeof tab.id !== 'number') return;
-      sendMessageToTab(tab.id, { method: 'Nunze_copySelection' });
+      sendCopyRequest(tab.id);
       return;
     case 'OP-lodestone':
       chrome.tabs.create({
@@ -29,7 +31,7 @@ function onMenuClick(
   if (v[0] === 'SC') {
     const idx = parseInt(v[1], 10);
     if (isNaN(idx) || !tab) return;
-    searchWithSite(tab, idx);
+    sendSearchWithSiteRequest(tab, idx);
   }
 }
 
