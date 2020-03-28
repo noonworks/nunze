@@ -1,6 +1,8 @@
 <template>
   <div>
-    <button :disabled="disabled">設定を初期化する</button>
+    <button :disabled="disabled" @click="$emit('reset')">
+      設定を初期化する
+    </button>
     <div :class="$style.error" v-show="error">
       <p>
         設定を正常に読み込めませんでした。設定データが破損している可能性があります。

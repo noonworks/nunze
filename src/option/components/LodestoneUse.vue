@@ -49,7 +49,7 @@
       <p>
         機能の使用を止めるときには、以下のボタンでデータを削除できます。
       </p>
-      <button id="deletelodestonedata">
+      <button @click="$emit('delete-lodestone')">
         LodeStoneから読み取った情報を削除する
       </button>
     </BaseDescription>

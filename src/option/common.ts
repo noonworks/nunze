@@ -114,3 +114,32 @@ export const autoSave = ((): ((data: Version2) => void) => {
     _saveData = data;
   };
 })();
+
+//
+// Reset data
+//
+export function reset(): void {
+  if (!window.confirm('設定を初期化します。よろしいですか？')) return;
+  hideSpinner();
+  postOptionMessage(subWindow, {
+    method: 'Nunze_OPTIONS_RESET',
+    data: '',
+  });
+}
+
+//
+// Delete lodestone data
+//
+export function deleteLodestone(): void {
+  if (
+    !window.confirm(
+      'LodeStoneから読み取った情報を削除します。よろしいですか？\n' +
+        '（削除しても再度読み取ることができます。）'
+    )
+  )
+    return;
+  postOptionMessage(subWindow, {
+    method: 'NUNZE_DELETE_LODESTONE_DATA',
+    data: '',
+  });
+}

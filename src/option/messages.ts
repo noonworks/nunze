@@ -88,6 +88,16 @@ export interface SubLoadedRequest {
   data: '';
 }
 
+export interface OptionResetRequest {
+  method: 'Nunze_OPTIONS_RESET';
+  data: '';
+}
+
+export interface DeleteLodestoneRequest {
+  method: 'NUNZE_DELETE_LODESTONE_DATA';
+  data: '';
+}
+
 export type OptionRequests =
   | SaveOptionRequest
   | OptionFirstLoadRequest
@@ -95,4 +105,6 @@ export type OptionRequests =
   | OptionSubSavedRequest
   | LodestoneDeletedRequest
   | SubResetRequest
-  | SubLoadedRequest;
+  | SubLoadedRequest
+  | OptionResetRequest
+  | DeleteLodestoneRequest;

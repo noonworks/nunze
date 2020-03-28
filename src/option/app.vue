@@ -2,14 +2,17 @@
   <div>
     <Spinner :shown="showSpinner" :loading="loading"></Spinner>
 
-    <InitializeButton :error="loadError"></InitializeButton>
+    <InitializeButton :error="loadError" @reset="reset"></InitializeButton>
 
     <SearchSites v-model="sites"></SearchSites>
 
     <section>
       <h1>LodeStone読み取り</h1>
 
-      <LodestoneUse v-model="opt.data.lodestone.use"></LodestoneUse>
+      <LodestoneUse
+        v-model="opt.data.lodestone.use"
+        @delete-lodestone="deleteLodestone"
+      ></LodestoneUse>
 
       <RetainerSearch v-model="opt.data.lodestone"></RetainerSearch>
     </section>
@@ -19,7 +22,13 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { DEFAULT_OPTIONS } from '../events/option';
-import { sendSaveOptionDataRequest, autoSave, AppInterface } from './common';
+import {
+  sendSaveOptionDataRequest,
+  autoSave,
+  AppInterface,
+  reset,
+  deleteLodestone,
+} from './common';
 import { Version2, Site } from '../events/option/version2';
 import InitializeButton from './components/InitializeButton.vue';
 import LodestoneUse from './components/LodestoneUse.vue';
@@ -37,7 +46,7 @@ import Spinner from './components/Spinner.vue';
   },
 })
 export default class App extends Vue implements AppInterface {
-  opt: Version2 = DEFAULT_OPTIONS;
+  opt: Version2 = { ...DEFAULT_OPTIONS };
   loading: boolean = false;
   showSpinner: boolean = false;
   loadError: boolean = false;
@@ -88,6 +97,14 @@ export default class App extends Vue implements AppInterface {
     this.opt.data.search.sites = this.sitesCache.map((s) => {
       return { use: s.use, name: s.name, url: s.url };
     });
+  }
+
+  public reset(): void {
+    reset();
+  }
+
+  public deleteLodestone(): void {
+    deleteLodestone();
   }
 
   @Watch('opt', { deep: true })
