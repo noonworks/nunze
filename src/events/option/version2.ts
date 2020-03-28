@@ -19,10 +19,6 @@ export interface Version2 extends NunzeOptionBase {
     search: {
       sites: Site[];
     };
-    mouseover: {
-      use: boolean;
-      historyMax: number;
-    };
   };
 }
 
@@ -35,9 +31,6 @@ export function migrate1to2(opt: Version1): Version2 {
       },
       search: {
         ...opt.data.search,
-      },
-      mouseover: {
-        ...opt.data.mouseover,
       },
     },
   } as Version2;

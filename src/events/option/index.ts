@@ -42,9 +42,5 @@ export const DEFAULT_OPTIONS: Version2 = {
         },
       ],
     },
-    mouseover: {
-      use: false,
-      historyMax: 50,
-    },
   },
 };
