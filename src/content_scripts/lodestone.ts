@@ -4,6 +4,7 @@ import { loadMetadata } from './lodestone/loadMetadata';
 import { initMenu } from './lodestone/menu';
 import { failAlert } from './lodestone/util';
 import { sendSaveInventoriesRequest, sendGetOptionRequest } from './requests';
+import { EventToContentMessage } from '../messages/EventToContentMessages';
 
 //
 // Load retainer inventory
@@ -20,7 +21,7 @@ function loadInventory(): InventoryData | null {
   };
 }
 
-function onMessage(message: Messages): boolean {
+function onMessage(message: EventToContentMessage): boolean {
   if (message.method === 'Nunze_LoadInventory') {
     const inv = loadInventory();
     if (!inv) {

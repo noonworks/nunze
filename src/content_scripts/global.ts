@@ -1,4 +1,8 @@
 import { sendUpdateSearchMenu } from './requests';
+import {
+  EventToContentMessage,
+  EventToContentResponse,
+} from '../messages/EventToContentMessages';
 
 function copyText(str: string): void {
   const textarea = document.createElement('textarea');
@@ -125,8 +129,9 @@ function showSearchInventoryResult(
 //
 // On message or events
 //
+type ResponseSenders = (response: EventToContentResponse) => void;
 function onMessage(
-  message: Messages,
+  message: EventToContentMessage,
   _: chrome.runtime.MessageSender,
   sendResponse: ResponseSenders
 ): boolean {
@@ -140,18 +145,16 @@ function onMessage(
     case 'Nunze_copySelection':
       if (_selectedWord.length > 0) {
         copyText(_selectedWord);
-        sendResponse({ copied: _selectedWord });
-      } else {
-        sendResponse({ copied: undefined });
-      }
+        sendResponse({ method: 'Nunze_copySelection', copied: _selectedWord });
+      } else sendResponse({ method: 'Nunze_copySelection' });
       break;
-    case 'Nunze_showInventorySearchResult':
-      showSearchInventoryResult(
-        message.result,
-        message.characters,
-        message.url
-      );
-      break;
+    // case 'Nunze_showInventorySearchResult':
+    //   showSearchInventoryResult(
+    //     message.result,
+    //     message.characters,
+    //     message.url
+    //   );
+    //   break;
     default:
       break;
   }

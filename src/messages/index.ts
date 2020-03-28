@@ -1,8 +1,4 @@
 import {
-  UpdateSearchMenuMessage,
-  UpdateSearchMenuResponse,
-} from './messages/UpdateSearchMenu';
-import {
   GetSelectionMessage,
   GetSelectionResponse,
 } from './messages/GetSelection';
@@ -10,53 +6,49 @@ import {
   CopySelectionMessage,
   CopySelectionResponse,
 } from './messages/CopySelection';
-import { ShowInventorySearchResultMessage } from './messages/ShowInventorySearchResult';
 import { GetOptionResponse, GetOptionMessage } from './messages/GetOption';
-import {
-  SaveInventoriesResponse,
-  SaveInventoriesMessage,
-} from './messages/SaveInventories';
-import {
-  SaveCharactersResponse,
-  SaveCharactersMessage,
-} from './messages/SaveCharacters';
-import {
-  SaveFreeCompanyResponse,
-  SaveFreeCompanyMessage,
-} from './messages/SaveFreeCompany';
-import { ErrorResponse } from './messages/Error';
 import { LoadInventoryMessage } from './messages/LoadInventory';
-import { StartRetainerCrawlersMessage } from './messages/StartRetainerCrawler';
-import { ResetOptionMessage } from './messages/ResetOption';
-import { DeleteLodestoneDataMessage } from './messages/DeleteLodestoneData';
+import {
+  ResetOptionMessage,
+  ResetOptionResponse,
+} from './messages/ResetOption';
+import {
+  DeleteLodestoneDataMessage,
+  DeleteLodestoneDataResponse,
+} from './messages/DeleteLodestoneData';
 import { SaveOptionDataMessage } from './messages/SaveOptionData';
+import { SaveInventoriesMessage } from './messages/SaveInventories';
+import { SaveCharactersMessage } from './messages/SaveCharacters';
+import { StartRetainerCrawlersMessage } from './messages/StartRetainerCrawler';
+import { SaveFreeCompanyMessage } from './messages/SaveFreeCompany';
+import {
+  UpdateSearchMenuMessage,
+  UpdateSearchMenuResponse,
+} from './messages/UpdateSearchMenu';
 
 type Messages =
-  | UpdateSearchMenuMessage
+  | GetOptionMessage
+  | SaveOptionDataMessage
+  | ResetOptionMessage
+  | DeleteLodestoneDataMessage
   | GetSelectionMessage
   | CopySelectionMessage
-  | ShowInventorySearchResultMessage
-  | GetOptionMessage
   | LoadInventoryMessage
   | SaveInventoriesMessage
   | SaveCharactersMessage
   | StartRetainerCrawlersMessage
   | SaveFreeCompanyMessage
-  | SaveOptionDataMessage
-  | ResetOptionMessage
-  | DeleteLodestoneDataMessage;
+  | UpdateSearchMenuMessage;
 
 type Responses =
-  | ErrorResponse
-  | UpdateSearchMenuResponse
+  | GetOptionResponse
+  | ResetOptionResponse
+  | DeleteLodestoneDataResponse
   | GetSelectionResponse
   | CopySelectionResponse
-  | GetOptionResponse
-  | SaveInventoriesResponse
-  | SaveCharactersResponse
-  | SaveFreeCompanyResponse;
+  | UpdateSearchMenuResponse;
 
-type MessageCallBack = (response: Responses) => void;
+export type MessageCallBack = (response: Responses) => void;
 
 export function _sendMessage(
   message: Messages,

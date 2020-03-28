@@ -1,4 +1,3 @@
-import { ResponseSenders, Messages } from '../messages';
 import { init as initMenu } from './menu/index';
 import { NunzeMenu } from './menu/NunzeMenu';
 import { OptionStorage } from './option/storage';
@@ -8,12 +7,17 @@ import {
 } from './lodestone/crawler';
 import { CharacterStore } from './lodestone/character/character';
 import { Inventory } from './lodestone/inventory/Inventory';
+import {
+  ContentToEventMessage,
+  ContentToEventResponse,
+} from '../messages/ContentToEventMessage';
 
+type ResponseSenders = (response: ContentToEventResponse) => void;
 function onMessage(
-  message: Messages,
+  message: ContentToEventMessage,
   sender: chrome.runtime.MessageSender,
   sendResponse: ResponseSenders
-): void {
+): boolean {
   switch (message.method) {
     //
     // Context Menu methods
@@ -60,22 +64,17 @@ function onMessage(
         opt: OptionStorage.instance().load(),
       });
       break;
-    //
-    // Error
-    //
-    default:
-      sendResponse({ error: 'Method [' + message.method + '] is not found.' });
-      break;
   }
+  return true;
 }
 // chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 //   switch (message.method) {
 //     // Character and Inventory Data methods
-//     case 'Nunze_deleteLoadstoneData':
-//       deleteInventories();
-//       deleteCharacters();
-//       sendResponse({ succeed: true });
-//       break;
+// case 'Nunze_deleteLoadstoneData':
+//   deleteInventories();
+//   deleteCharacters();
+//   sendResponse({ method: 'Nunze_deleteLoadstoneData', succeed: true });
+//   break;
 //     // Option Data methods
 //     case 'Nunze_resetOption':
 //       sendResponse({ opt: resetOption() });
