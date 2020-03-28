@@ -1,5 +1,9 @@
 import { Version2 } from '../events/option/version2';
-import { OptionMessages, OptionRequests } from './messages';
+import {
+  MainToSubMessages,
+  SubToMainMessages,
+  InvalidMessage,
+} from './messages';
 
 //
 // Vue instance
@@ -58,33 +62,37 @@ document.addEventListener('DOMContentLoaded', () => {
 //
 // Split method and data
 //
-export function splitData(message: string): OptionMessages {
+export function splitData(
+  message: string
+): MainToSubMessages | SubToMainMessages | InvalidMessage {
   const cln = message.indexOf(':');
-  if (cln < 0) return { method: 'Nunze_Invalid' };
+  if (cln < 0) return { method: 'Nunze_Invalid', data: '' };
   const method = message.substring(0, cln);
   switch (method) {
     case 'Nunze_OPTIONS_SUB_LOADED':
     case 'Nunze_OPTIONS_FIRST_LOAD':
     case 'Nunze_LODESTONE_DATA_DELETED':
     case 'Nunze_OPTIONS_SUB_SAVED':
-      return { method };
+      return { method, data: '' };
     case 'Nunze_OPTIONS_SUB_FIRST_LOADED':
     case 'Nunze_OPTIONS_SUB_RESET':
-      return { method, data: message.substring(cln + 1, message.length) };
+    case 'Nunze_OPTIONS_RESET':
+    case 'Nunze_OPTIONS_SAVE_OPTION_DATA':
+      return {
+        method,
+        data: message.substring(cln + 1, message.length),
+      };
     default:
-      return { method: 'Nunze_Invalid' };
+      return { method: 'Nunze_Invalid', data: '' };
   }
 }
 
 //
-// post message
+// send message to sub window
 //
-export function postOptionMessage(
-  win: Window | null,
-  request: OptionRequests
-): void {
-  if (!win) return;
-  win.postMessage(request.method + ':' + request.data, '*');
+export function sendToSub(request: MainToSubMessages): void {
+  if (!subWindow) return;
+  subWindow.postMessage(request.method + ':' + request.data, '*');
 }
 
 //
@@ -93,7 +101,7 @@ export function postOptionMessage(
 export function sendSaveOptionDataRequest(data: Version2): void {
   if (!subWindow) return;
   startSaving();
-  postOptionMessage(subWindow, {
+  sendToSub({
     method: 'Nunze_OPTIONS_SAVE_OPTION_DATA',
     data: JSON.stringify(data),
   });
@@ -121,10 +129,7 @@ export const autoSave = ((): ((data: Version2) => void) => {
 export function reset(): void {
   if (!window.confirm('設定を初期化します。よろしいですか？')) return;
   hideSpinner();
-  postOptionMessage(subWindow, {
-    method: 'Nunze_OPTIONS_RESET',
-    data: '',
-  });
+  sendToSub({ method: 'Nunze_OPTIONS_RESET', data: '' });
 }
 
 //
@@ -138,8 +143,5 @@ export function deleteLodestone(): void {
     )
   )
     return;
-  postOptionMessage(subWindow, {
-    method: 'NUNZE_DELETE_LODESTONE_DATA',
-    data: '',
-  });
+  sendToSub({ method: 'NUNZE_DELETE_LODESTONE_DATA', data: '' });
 }

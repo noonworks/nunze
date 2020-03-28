@@ -2,14 +2,15 @@ import App from './app.vue';
 import {
   splitData,
   subWindow,
-  postOptionMessage,
   mountVue,
   startLoading,
   hideSpinner,
   hideLoadError,
   showLoadError,
   updateData,
+  sendToSub,
 } from './common';
+import { SubToMainMessages } from './messages';
 
 document.addEventListener('DOMContentLoaded', () => {
   mountVue(new App());
@@ -34,14 +35,11 @@ window.addEventListener(
   'message',
   (message) => {
     if (!subWindow || message.source !== subWindow) return;
-    const msg = splitData(message.data);
+    const msg = splitData(message.data) as SubToMainMessages;
     switch (msg.method) {
       case 'Nunze_OPTIONS_SUB_LOADED':
         // on sub window loaded
-        postOptionMessage(subWindow, {
-          method: 'Nunze_OPTIONS_FIRST_LOAD',
-          data: '',
-        });
+        sendToSub({ method: 'Nunze_OPTIONS_FIRST_LOAD', data: '' });
         break;
       case 'Nunze_OPTIONS_SUB_FIRST_LOADED':
         // on completed first-load
