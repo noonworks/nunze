@@ -1,4 +1,4 @@
-import { NunzeOptionBase } from '../events/option/option';
+import { NunzeOptionBase } from '../../events/option/option';
 
 export interface GetOptionMessage {
   method: 'Nunze_getOption';

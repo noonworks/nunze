@@ -1,31 +1,37 @@
 import {
   UpdateSearchMenuMessage,
   UpdateSearchMenuResponse,
-} from './UpdateSearchMenu';
-import { GetSelectionMessage, GetSelectionResponse } from './GetSelection';
-import { CopySelectionMessage, CopySelectionResponse } from './CopySelection';
-import { ShowInventorySearchResultMessage } from './ShowInventorySearchResult';
-import { ErrorResponse } from './Error';
-import { GetOptionMessage, GetOptionResponse } from './GetOption';
-import { LoadInventoryMessage } from './LoadInventory';
+} from './messages/UpdateSearchMenu';
 import {
-  SaveInventoriesMessage,
+  GetSelectionMessage,
+  GetSelectionResponse,
+} from './messages/GetSelection';
+import {
+  CopySelectionMessage,
+  CopySelectionResponse,
+} from './messages/CopySelection';
+import { ShowInventorySearchResultMessage } from './messages/ShowInventorySearchResult';
+import { GetOptionResponse, GetOptionMessage } from './messages/GetOption';
+import {
   SaveInventoriesResponse,
-} from './SaveInventories';
+  SaveInventoriesMessage,
+} from './messages/SaveInventories';
 import {
-  SaveCharactersMessage,
   SaveCharactersResponse,
-} from './SaveCharacters';
-import { StartRetainerCrawlersMessage } from './StartRetainerCrawler';
+  SaveCharactersMessage,
+} from './messages/SaveCharacters';
 import {
-  SaveFreeCompanyMessage,
   SaveFreeCompanyResponse,
-} from './SaveFreeCompany';
-import { SaveOptionDataMessage } from './SaveOptionData';
-import { ResetOptionMessage } from './ResetOption';
-import { DeleteLoadstoneDataMessage } from './DeleteLoadstoneData';
+  SaveFreeCompanyMessage,
+} from './messages/SaveFreeCompany';
+import { ErrorResponse } from './messages/Error';
+import { LoadInventoryMessage } from './messages/LoadInventory';
+import { StartRetainerCrawlersMessage } from './messages/StartRetainerCrawler';
+import { ResetOptionMessage } from './messages/ResetOption';
+import { DeleteLodestoneDataMessage } from './messages/DeleteLodestoneData';
+import { SaveOptionDataMessage } from './messages/SaveOptionData';
 
-export type Messages =
+type Messages =
   | UpdateSearchMenuMessage
   | GetSelectionMessage
   | CopySelectionMessage
@@ -38,9 +44,9 @@ export type Messages =
   | SaveFreeCompanyMessage
   | SaveOptionDataMessage
   | ResetOptionMessage
-  | DeleteLoadstoneDataMessage;
+  | DeleteLodestoneDataMessage;
 
-export type Responses =
+type Responses =
   | ErrorResponse
   | UpdateSearchMenuResponse
   | GetSelectionResponse
@@ -50,17 +56,16 @@ export type Responses =
   | SaveCharactersResponse
   | SaveFreeCompanyResponse;
 
-export type MessageCallBack = (response: Responses) => void;
-export type ResponseSenders = (message: Responses) => void;
+type MessageCallBack = (response: Responses) => void;
 
-export function sendMessage(
+export function _sendMessage(
   message: Messages,
   callback?: MessageCallBack
 ): void {
   chrome.runtime.sendMessage(message, callback);
 }
 
-export function sendMessageToTab(
+export function _sendMessageToTab(
   tabId: number,
   message: Messages,
   callback?: MessageCallBack

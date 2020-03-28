@@ -3,5 +3,6 @@ export interface CopySelectionMessage {
 }
 
 export interface CopySelectionResponse {
-  copied?: string;
+  method: 'Nunze_copySelection';
+  copied: string;
 }

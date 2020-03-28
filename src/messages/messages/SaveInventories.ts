@@ -1,4 +1,4 @@
-import { InventoryData } from '../events/lodestone/inventory/data';
+import { InventoryData } from '../../events/lodestone/inventory/data';
 
 export interface SaveInventoriesMessage {
   method: 'Nunze_saveInventories';

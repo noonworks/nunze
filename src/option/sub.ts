@@ -1,9 +1,9 @@
 import { splitData } from './common';
-import { sendMessage as _sendMessage, MessageCallBack } from '../messages';
-import { isGetOptionResponse } from '../messages/GetOption';
-import { isResetOptionResponse } from '../messages/ResetOption';
+import { _sendMessage, MessageCallBack } from '../messages';
+import { isGetOptionResponse } from '../messages/messages/GetOption';
+import { isResetOptionResponse } from '../messages/messages/ResetOption';
 import { SubToMainMessages, MainToSubMessages } from './messages';
-import { SubToBackgroundMessages } from '../SubToBackgroundMessages';
+import { SubToBackgroundMessages } from '../messages/SubToBackgroundMessages';
 
 //
 // send message to parent window
@@ -58,7 +58,7 @@ window.addEventListener(
         });
         break;
       case 'NUNZE_DELETE_LODESTONE_DATA':
-        sendBackground({ method: 'Nunze_deleteLoadstoneData' }, () => {
+        sendBackground({ method: 'Nunze_deleteLodestoneData' }, () => {
           sendParent({ method: 'Nunze_LODESTONE_DATA_DELETED', data: '' });
         });
         break;
