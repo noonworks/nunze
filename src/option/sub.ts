@@ -3,7 +3,7 @@ import { _sendMessage, MessageCallBack } from '../messages';
 import { isGetOptionResponse } from '../messages/messages/GetOption';
 import { isResetOptionResponse } from '../messages/messages/ResetOption';
 import { SubToMainMessages, MainToSubMessages } from './messages';
-import { SubToBackgroundMessages } from '../messages/SubToBackgroundMessages';
+import { SubToEventMessages } from '../messages/SubToEventMessages';
 
 //
 // send message to parent window
@@ -16,7 +16,7 @@ function sendParent(request: SubToMainMessages): void {
 // send message to background script
 //
 const sendBackground: (
-  message: SubToBackgroundMessages,
+  message: SubToEventMessages,
   callback?: MessageCallBack
 ) => void = _sendMessage;
 

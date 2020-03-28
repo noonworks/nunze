@@ -3,7 +3,7 @@ import {
   sendSearchWithSiteRequest,
   sendCopyRequest,
   sendSearchInventoryRequest,
-} from './requests';
+} from '../requests';
 
 function onMenuClick(
   info: chrome.contextMenus.OnClickData,

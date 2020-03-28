@@ -1,7 +1,7 @@
-import { sendMessageToTab } from '../../messages';
 import { Inventory } from './inventory/Inventory';
 import { InventoryData } from './inventory/data';
 import { CharacterStorageDataData } from './character/data';
+import { loadInventoryRequest } from '../requests';
 
 interface CrawlQueue {
   characterId: string;
@@ -14,9 +14,9 @@ function waitTabToCrawl(tab?: chrome.tabs.Tab): void {
   if (!tab || typeof tab.id !== 'number') return;
   const tabId = tab.id;
   if (tab.status == 'complete') {
-    sendMessageToTab(tabId, { method: 'Nunze_LoadInventory' });
+    loadInventoryRequest(tabId);
   } else {
-    setTimeout(function () {
+    setTimeout(() => {
       chrome.tabs.get(tabId, waitTabToCrawl);
     }, 200);
   }

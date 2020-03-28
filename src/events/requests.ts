@@ -1,15 +1,15 @@
-import { OptionStorage } from '../option/storage';
-import { searchInventory as doSearchInventory } from '../lodestone/SearchInventory';
-import { MenuToContentMessages } from '../../messages/MenuToContentMessages';
-import { _sendMessageToTab, MessageCallBack } from '../../messages';
-import { isGetSelectionResponse } from '../../messages/messages/GetSelection';
+import { OptionStorage } from './option/storage';
+import { searchInventory as doSearchInventory } from './lodestone/SearchInventory';
+import { _sendMessageToTab, MessageCallBack } from '../messages';
+import { isGetSelectionResponse } from '../messages/messages/GetSelection';
+import { EventToContentMessage } from '../messages/EventToContentMessages';
 
 //
 // send message to parent window
 //
 const sendToContent: (
   tabId: number,
-  message: MenuToContentMessages,
+  message: EventToContentMessage,
   callback?: MessageCallBack
 ) => void = _sendMessageToTab;
 
@@ -56,4 +56,11 @@ export function sendSearchInventoryRequest(tab: chrome.tabs.Tab): void {
     if (!str || str.length == 0 || !tab || typeof tab.id !== 'number') return;
     doSearchInventory(str, tab.id);
   });
+}
+
+//
+// load inventory on page
+//
+export function loadInventoryRequest(tabId: number): void {
+  sendToContent(tabId, { method: 'Nunze_LoadInventory' });
 }

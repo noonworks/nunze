@@ -3,7 +3,7 @@ import { SaveOptionDataMessage } from './messages/SaveOptionData';
 import { ResetOptionMessage } from './messages/ResetOption';
 import { DeleteLodestoneDataMessage } from './messages/DeleteLodestoneData';
 
-export type SubToBackgroundMessages =
+export type SubToEventMessages =
   | GetOptionMessage
   | SaveOptionDataMessage
   | ResetOptionMessage
