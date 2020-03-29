@@ -15,6 +15,7 @@ import {
   SubToEventMessages,
   SubToEventResponses,
 } from '../messages/SubToEventMessages';
+import { Version2 } from './option/version2';
 
 type ResponseSenders = (
   response: ContentToEventResponse | SubToEventResponses
@@ -59,6 +60,12 @@ function onMessage(
       CharacterStore.instance().remove();
       sendResponse({ method: 'Nunze_deleteLodestoneData', succeed: true });
       break;
+    case 'Nunze_resetOption':
+      sendResponse({
+        method: 'Nunze_resetOption',
+        opt: OptionStorage.instance().reset() as Version2,
+      });
+      break;
     //
     // FC data methods
     //
@@ -82,15 +89,6 @@ function onMessage(
   }
   return true;
 }
-// chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-//   switch (message.method) {
-//     // Character and Inventory Data methods
-//     // Option Data methods
-//     case 'Nunze_resetOption':
-//       sendResponse({ opt: resetOption() });
-//       break;
-//   }
-// });
 
 function init(): void {
   console.log('Nunze script events loaded.');

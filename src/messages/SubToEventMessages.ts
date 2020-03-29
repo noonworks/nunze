@@ -1,6 +1,9 @@
 import { GetOptionMessage } from './messages/GetOption';
 import { SaveOptionDataMessage } from './messages/SaveOptionData';
-import { ResetOptionMessage } from './messages/ResetOption';
+import {
+  ResetOptionMessage,
+  ResetOptionResponse,
+} from './messages/ResetOption';
 import {
   DeleteLodestoneDataMessage,
   DeleteLodestoneDataResponse,
@@ -12,4 +15,6 @@ export type SubToEventMessages =
   | ResetOptionMessage
   | DeleteLodestoneDataMessage;
 
-export type SubToEventResponses = DeleteLodestoneDataResponse;
+export type SubToEventResponses =
+  | ResetOptionResponse
+  | DeleteLodestoneDataResponse;
