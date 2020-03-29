@@ -73,6 +73,7 @@ export function splitData(
     case 'Nunze_OPTIONS_FIRST_LOAD':
     case 'Nunze_LODESTONE_DATA_DELETED':
     case 'Nunze_OPTIONS_SUB_SAVED':
+    case 'NUNZE_DELETE_LODESTONE_DATA':
       return { method, data: '' };
     case 'Nunze_OPTIONS_SUB_FIRST_LOADED':
     case 'Nunze_OPTIONS_SUB_RESET':
