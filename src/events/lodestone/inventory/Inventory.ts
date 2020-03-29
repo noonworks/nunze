@@ -30,6 +30,10 @@ export class Inventory {
     return this.storage.loadAll().map((i) => i.data);
   }
 
+  public removeAll(): void {
+    this.storage.removeAll();
+  }
+
   public save(inventories: InventoryData[]): void {
     for (let i = 0; i < inventories.length; i++) {
       if (

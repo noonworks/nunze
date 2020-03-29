@@ -57,4 +57,8 @@ export class CharacterStore {
     };
     return this.storage.save(charData);
   }
+
+  public remove(): void {
+    this.storage.remove();
+  }
 }

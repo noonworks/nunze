@@ -11,10 +11,16 @@ import {
   ContentToEventMessage,
   ContentToEventResponse,
 } from '../messages/ContentToEventMessage';
+import {
+  SubToEventMessages,
+  SubToEventResponses,
+} from '../messages/SubToEventMessages';
 
-type ResponseSenders = (response: ContentToEventResponse) => void;
+type ResponseSenders = (
+  response: ContentToEventResponse | SubToEventResponses
+) => void;
 function onMessage(
-  message: ContentToEventMessage,
+  message: ContentToEventMessage | SubToEventMessages,
   sender: chrome.runtime.MessageSender,
   sendResponse: ResponseSenders
 ): boolean {
@@ -48,6 +54,11 @@ function onMessage(
         sendResponse({ method: 'Nunze_saveInventories', status: 'completed' });
       }
       break;
+    case 'Nunze_deleteLodestoneData':
+      Inventory.instance().removeAll();
+      CharacterStore.instance().remove();
+      sendResponse({ method: 'Nunze_deleteLodestoneData', succeed: true });
+      break;
     //
     // FC data methods
     //
@@ -74,11 +85,6 @@ function onMessage(
 // chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 //   switch (message.method) {
 //     // Character and Inventory Data methods
-// case 'Nunze_deleteLoadstoneData':
-//   deleteInventories();
-//   deleteCharacters();
-//   sendResponse({ method: 'Nunze_deleteLoadstoneData', succeed: true });
-//   break;
 //     // Option Data methods
 //     case 'Nunze_resetOption':
 //       sendResponse({ opt: resetOption() });
