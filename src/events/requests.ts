@@ -3,6 +3,7 @@ import { searchInventory as doSearchInventory } from './lodestone/SearchInventor
 import { _sendMessageToTab, MessageCallBack } from '../messages';
 import { isGetSelectionResponse } from '../messages/messages/GetSelection';
 import { EventToContentMessage } from '../messages/EventToContentMessages';
+import { InventorySearchResult } from '../messages/messages/ShowInventorySearchResult';
 
 //
 // send message to content script
@@ -63,4 +64,17 @@ export function sendSearchInventoryRequest(tab: chrome.tabs.Tab): void {
 //
 export function loadInventoryRequest(tabId: number): void {
   sendToContent(tabId, { method: 'Nunze_LoadInventory' });
+}
+
+//
+//
+//
+export function sendShowInventorySearchResult(
+  tabId: number,
+  data: InventorySearchResult
+): void {
+  sendToContent(tabId, {
+    method: 'Nunze_showInventorySearchResult',
+    ...data,
+  });
 }

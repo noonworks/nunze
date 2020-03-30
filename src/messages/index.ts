@@ -25,6 +25,7 @@ import {
   UpdateSearchMenuMessage,
   UpdateSearchMenuResponse,
 } from './messages/UpdateSearchMenu';
+import { ShowInventorySearchResultMessage } from './messages/ShowInventorySearchResult';
 
 type Messages =
   | GetOptionMessage
@@ -38,7 +39,8 @@ type Messages =
   | SaveCharactersMessage
   | StartRetainerCrawlersMessage
   | SaveFreeCompanyMessage
-  | UpdateSearchMenuMessage;
+  | UpdateSearchMenuMessage
+  | ShowInventorySearchResultMessage;
 
 type Responses =
   | GetOptionResponse

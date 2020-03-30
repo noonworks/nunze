@@ -3,6 +3,8 @@ import {
   EventToContentMessage,
   EventToContentResponse,
 } from '../messages/EventToContentMessages';
+import { MatchResult } from '../events/lodestone/match';
+import { CharacterStorageDataData } from '../events/lodestone/character/data';
 
 function copyText(str: string): void {
   const textarea = document.createElement('textarea');
@@ -109,13 +111,13 @@ const WIDTH_IFRAME = 360;
 const HEIGHT_IFRAME = 200;
 let _showingSearchInventoryResult = false;
 function showSearchInventoryResult(
-  result: string,
-  characters: string,
+  result: MatchResult,
+  characters: { [key: string]: CharacterStorageDataData },
   url: string
 ): void {
   _showingSearchInventoryResult = true;
   const f = popup({ w: WIDTH_IFRAME, h: HEIGHT_IFRAME });
-  const msgOpt = { result: result, characters: characters };
+  const msgOpt = { result, characters };
   f.src = url;
   f.onload = (): void => {
     if (!f.contentWindow) return;
@@ -148,13 +150,13 @@ function onMessage(
         sendResponse({ method: 'Nunze_copySelection', copied: _selectedWord });
       } else sendResponse({ method: 'Nunze_copySelection' });
       break;
-    // case 'Nunze_showInventorySearchResult':
-    //   showSearchInventoryResult(
-    //     message.result,
-    //     message.characters,
-    //     message.url
-    //   );
-    //   break;
+    case 'Nunze_showInventorySearchResult':
+      showSearchInventoryResult(
+        message.result,
+        message.characters,
+        message.url
+      );
+      break;
     default:
       break;
   }

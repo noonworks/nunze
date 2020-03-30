@@ -26,6 +26,10 @@ export class CharacterStore {
     );
   }
 
+  public load(reload?: boolean): CharacterStorageData {
+    return this.storage.load(reload);
+  }
+
   public saveCharacters(characters: CharacterStorageDataData[]): void {
     const charData = this.storage.load();
     for (let i = 0; i < characters.length; i++) {

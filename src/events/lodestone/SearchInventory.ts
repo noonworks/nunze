@@ -2,6 +2,8 @@ import { OptionStorage } from '../option/storage';
 import { Inventory } from './inventory/Inventory';
 import { match, MatchResult } from './match';
 import { Version2 } from '../option/version2';
+import { CharacterStore } from './character/character';
+import { sendShowInventorySearchResult } from '../requests';
 
 function doSearchInventory(itemName: string): MatchResult {
   // Search options
@@ -19,15 +21,10 @@ function doSearchInventory(itemName: string): MatchResult {
 }
 
 export function searchInventory(itemName: string, tabId: number): void {
-  console.log(itemName, tabId);
   const result = doSearchInventory(itemName);
   console.log(result);
-  // const characters = result.number > 0 ? _getCharacters().data : {};
-  // const url = chrome.runtime.getURL('pages/retainer_search_result.html');
-  // chrome.tabs.sendMessage(tab_id, {
-  //   method: 'Nunze_showInventorySearchResult',
-  //   result: result,
-  //   url: url,
-  //   characters: characters,
-  // });
+  const characters =
+    result.count > 0 ? CharacterStore.instance().load().data : {};
+  const url = chrome.runtime.getURL('pages/retainer_search_result.html');
+  sendShowInventorySearchResult(tabId, { result, url, characters });
 }
