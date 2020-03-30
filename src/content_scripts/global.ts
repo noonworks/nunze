@@ -49,6 +49,7 @@ function popup(opt: PopupOption): HTMLIFrameElement {
   _popupIframe.style.top = `${y}px`;
   _popupIframe.style.width = opt.w ? `${opt.w}px` : '';
   _popupIframe.style.height = opt.h ? '' + `${opt.h}px` : '';
+  _popupIframe.style.display = '';
   return _popupIframe;
 }
 

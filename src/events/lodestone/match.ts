@@ -1,11 +1,11 @@
 import { fuzzyName } from './fuzzy';
 import { InventoryData, InventoryItem } from './inventory/data';
 
-interface MatchedItem extends InventoryItem {
-  characterId?: string;
-  retainerId?: string;
+export interface MatchedItem extends InventoryItem {
+  characterId: string;
+  retainerId: string;
   itemIndex?: number;
-  matchLevel?: number;
+  matchLevel: number;
 }
 
 interface HitResult {
@@ -19,6 +19,8 @@ interface HitResult {
 type MatchFunc = (
   name: string,
   item: InventoryItem,
+  characterId: string,
+  retainerId: string,
   ret: HitResult
 ) => MatchedItem | null;
 
@@ -42,10 +44,17 @@ function stripItemName(name: string): string {
 function fuzzyMatch(
   name: string,
   item: InventoryItem,
+  characterId: string,
+  retainerId: string,
   ret: HitResult
 ): MatchedItem | null {
   const fuzzyItem = fuzzyName(item.name);
-  const r: MatchedItem = { ...item };
+  const r: MatchedItem = {
+    ...item,
+    matchLevel: 0,
+    characterId,
+    retainerId,
+  };
   if (fuzzyItem === name) {
     r.matchLevel = 100;
     ret.fuzzyMatch.push(r);
@@ -64,9 +73,16 @@ function fuzzyMatch(
 function strictMatch(
   name: string,
   item: InventoryItem,
+  characterId: string,
+  retainerId: string,
   ret: HitResult
 ): MatchedItem | null {
-  const r: MatchedItem = { ...item };
+  const r: MatchedItem = {
+    ...item,
+    matchLevel: 0,
+    retainerId,
+    characterId,
+  };
   if (item.name === name) {
     r.matchLevel = 100;
     ret.strict.push(r);
@@ -94,16 +110,11 @@ function doMatch(
   ret.loadDateTimes = [];
   for (let i = 0; i < inventories.length; i++) {
     if (inventories[i].loadDateTime < expireDt) continue;
+    const cId = inventories[i].characterId;
+    const rId = inventories[i].retainerId;
     ret.loadDateTimes.push(inventories[i].loadDateTime);
     for (let j = 0; j < inventories[i].items.length; j++) {
-      func(name, inventories[i].items[j], ret);
-      // const r = func(name, inventories[i].items[j], ret);
-      // if (r != null) {
-      //   // JOIN data if found
-      //   inventories[i].items[j].characterId = inventories[i].characterId;
-      //   inventories[i].items[j].retainerId = inventories[i].retainerId;
-      //   inventories[i].items[j].itemIndex = j;
-      // }
+      func(name, inventories[i].items[j], cId, rId, ret);
     }
   }
 }
@@ -201,7 +212,12 @@ function mergeItemsData(
   return { result: retSorted, names: itemNames };
 }
 
-const RESULT_KEYS = ['strict', 'fuzzyMatch', 'part', 'fuzzyPart'] as const;
+export const RESULT_KEYS = [
+  'strict',
+  'fuzzyMatch',
+  'part',
+  'fuzzyPart',
+] as const;
 
 interface MergeResult {
   loadDateTime: string;
