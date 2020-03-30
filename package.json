@@ -75,5 +75,9 @@
       "!**/node_modules/**"
     ],
     "testRegex": "(/__tests__/.*|(\\.|/)(spec))\\.(ts)$"
+  },
+  "dependencies": {
+    "inspire-tree": "^6.0.1",
+    "inspire-tree-dom": "^4.0.6"
   }
 }
