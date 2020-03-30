@@ -43,5 +43,10 @@
     }
   ],
 
-  "options_page": "options.html"
+  "options_page": "options.html",
+
+  "sandbox": {
+    "pages": ["pages/retainer_search_result.html"]
+  },
+  "web_accessible_resources": ["pages/retainer_search_result.html"]
 }

@@ -22,7 +22,6 @@ function doSearchInventory(itemName: string): MatchResult {
 
 export function searchInventory(itemName: string, tabId: number): void {
   const result = doSearchInventory(itemName);
-  console.log(result);
   const characters =
     result.count > 0 ? CharacterStore.instance().load().data : {};
   const url = chrome.runtime.getURL('pages/retainer_search_result.html');

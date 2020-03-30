@@ -16,6 +16,11 @@ const config: ConfigurationFactory = () => {
       options: path.join(__dirname, 'src/option/main.ts'),
       // eslint-disable-next-line @typescript-eslint/camelcase
       options_sub: path.join(__dirname, 'src/option/sub.ts'),
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      retainer_search_result: path.join(
+        __dirname,
+        'src/pages/search_result.ts'
+      ),
     },
     output: {
       path: path.join(__dirname, 'dist/js'),

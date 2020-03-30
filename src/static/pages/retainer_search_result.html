@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Nunze リテイナー所持品検索結果</title>
+    <style>
+      body {
+        background-color: white;
+      }
+      h1 {
+        font-size: 1em;
+      }
+      p {
+        margin: 0;
+      }
+      p.sub {
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="error" style="display: none;">
+      <h1>Nunze リテイナー所持品検索結果</h1>
+      <p>結果が表示できませんでした。再度検索してみてください。</p>
+    </div>
+
+    <div id="result">
+      <h1>[<span id="search_word">検索ワード</span>]の検索結果</h1>
+      <div id="retainer_data_not_found">
+        <p>該当する情報は見つかりませんでした。</p>
+        <p>
+          リテイナー情報が古くなっている可能性があります。
+          <a href="http://jp.finalfantasyxiv.com/lodestone/" target="blank"
+            >LodeStone</a
+          >
+          で情報読み取りを行って、再度試してみてください。
+        </p>
+      </div>
+
+      <div id="found">
+        <div id="result_tree" class="tree"></div>
+        <p id="item_not_found">該当するアイテムは見つかりませんでした。</p>
+        <p class="sub">
+          リテイナー情報読取日時：<span id="load_datetime"
+            >2017/07/21 14:55</span
+          >
+        </p>
+      </div>
+    </div>
+    <script src="../js/retainer_search_result.js"></script>
+  </body>
+</html>
