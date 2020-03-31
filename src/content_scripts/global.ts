@@ -3,8 +3,8 @@ import {
   EventToContentMessage,
   EventToContentResponse,
 } from '../messages/EventToContentMessages';
-import { MatchResult } from '../events/lodestone/match';
 import { CharacterStorageDataData } from '../events/lodestone/character/data';
+import { MatchResult } from '../events/lodestone/matchTypes';
 
 function copyText(str: string): void {
   const textarea = document.createElement('textarea');

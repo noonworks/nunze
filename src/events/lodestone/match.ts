@@ -1,12 +1,11 @@
 import { fuzzyName } from './fuzzy';
 import { InventoryData, InventoryItem } from './inventory/data';
-
-export interface MatchedItem extends InventoryItem {
-  characterId: string;
-  retainerId: string;
-  itemIndex?: number;
-  matchLevel: number;
-}
+import {
+  MatchResult,
+  RESULT_KEYS,
+  MergeResult,
+  MatchedItem,
+} from './matchTypes';
 
 interface HitResult {
   strict: MatchedItem[];
@@ -212,22 +211,6 @@ function mergeItemsData(
   return { result: retSorted, names: itemNames };
 }
 
-export const RESULT_KEYS = [
-  'strict',
-  'fuzzyMatch',
-  'part',
-  'fuzzyPart',
-] as const;
-
-interface MergeResult {
-  loadDateTime: string;
-  count: number;
-  strict: MatchedItem[][];
-  part: MatchedItem[][];
-  fuzzyMatch: MatchedItem[][];
-  fuzzyPart: MatchedItem[][];
-}
-
 function mergeSearchResult(hit: HitResult): MergeResult {
   const ret: MergeResult = {
     loadDateTime: '',
@@ -256,10 +239,6 @@ function mergeSearchResult(hit: HitResult): MergeResult {
     ret.count += r.result.length;
   }
   return ret;
-}
-
-export interface MatchResult extends MergeResult {
-  word: string;
 }
 
 export function match(

@@ -2,7 +2,7 @@ import {
   MatchResult,
   RESULT_KEYS,
   MatchedItem,
-} from '../events/lodestone/match';
+} from '../events/lodestone/matchTypes';
 import { CharacterStorageDataData } from '../events/lodestone/character/data';
 import InspireTree, { NodeConfig } from 'inspire-tree';
 import InspireTreeDOM from 'inspire-tree-dom';

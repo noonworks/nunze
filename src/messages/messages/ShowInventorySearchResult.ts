@@ -1,5 +1,5 @@
-import { MatchResult } from '../../events/lodestone/match';
 import { CharacterStorageDataData } from '../../events/lodestone/character/data';
+import { MatchResult } from '../../events/lodestone/matchTypes';
 
 export interface InventorySearchResult {
   result: MatchResult;

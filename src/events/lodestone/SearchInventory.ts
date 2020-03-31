@@ -1,6 +1,7 @@
 import { OptionStorage } from '../option/storage';
 import { Inventory } from './inventory/Inventory';
-import { match, MatchResult } from './match';
+import { match } from './match';
+import { MatchResult } from './matchTypes';
 import { Version2 } from '../option/version2';
 import { CharacterStore } from './character/character';
 import { sendShowInventorySearchResult } from '../requests';
