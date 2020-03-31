@@ -1,6 +1,7 @@
 import { ConfigurationFactory } from 'webpack';
 import path from 'path';
 import { VueLoaderPlugin } from 'vue-loader';
+import TerserPlugin from 'terser-webpack-plugin';
 
 const config: ConfigurationFactory = () => {
   return {
@@ -61,7 +62,18 @@ const config: ConfigurationFactory = () => {
     },
     plugins: [new VueLoaderPlugin()],
     optimization: {
-      minimize: false,
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          extractComments: true,
+          terserOptions: {
+            compress: {
+              // eslint-disable-next-line @typescript-eslint/camelcase
+              drop_console: true,
+            },
+          },
+        }),
+      ],
     },
   };
 };
