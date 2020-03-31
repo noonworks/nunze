@@ -19,11 +19,12 @@
 
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*", "ftp://*/*"],
       "js": ["js/content_global.js"],
+      "matches": ["http://*/*", "https://*/*", "ftp://*/*"],
       "run_at": "document_end"
     },
     {
+      "js": ["js/content_lodestone.js"],
       "matches": [
         "http://jp.finalfantasyxiv.com/lodestone/",
         "https://jp.finalfantasyxiv.com/lodestone/",
@@ -38,7 +39,6 @@
         "http://jp.finalfantasyxiv.com/lodestone/linkshell/*",
         "https://jp.finalfantasyxiv.com/lodestone/linkshell/*"
       ],
-      "js": ["js/content_lodestone.js"],
       "run_at": "document_end"
     }
   ],
@@ -46,7 +46,13 @@
   "options_page": "options.html",
 
   "sandbox": {
-    "pages": ["pages/retainer_search_result.html"]
+    "pages": ["options.html", "pages/retainer_search_result.html"]
   },
-  "web_accessible_resources": ["pages/retainer_search_result.html"]
+
+  "web_accessible_resources": [
+    "options_sub.html",
+    "pages/retainer_search_result.html"
+  ],
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"
 }
