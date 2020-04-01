@@ -13,25 +13,31 @@ export function loadFCChest(meta: LodestoneMetadata): void {
     world: meta.character.world,
     loadDateTime: new Date().getTime(),
   };
-  const inv = {
-    characterId: 'FREECOMPANY',
-    retainerId: meta.fc.id,
-    loadDateTime: fc.loadDateTime,
-    items: loadBaggageItems(),
-  };
-  // FC情報の保存
-  sendSaveFreeCompanyRequest(fc)
-    .then(() => {
-      // FCチェスト情報の保存
-      sendSaveInventoriesRequest([inv], false)
+  loadBaggageItems()
+    .then((items) => {
+      const inv = {
+        characterId: 'FREECOMPANY',
+        retainerId: meta.fc.id,
+        loadDateTime: fc.loadDateTime,
+        items,
+      };
+      // FC情報の保存
+      sendSaveFreeCompanyRequest(fc)
         .then(() => {
-          alert('[Nunze]FCチェスト情報を保存しました。');
+          // FCチェスト情報の保存
+          sendSaveInventoriesRequest([inv], false)
+            .then(() => {
+              alert('[Nunze]FCチェスト情報を保存しました。');
+            })
+            .catch(() => {
+              failAlert('FCチェスト情報の保存');
+            });
         })
         .catch(() => {
-          failAlert('FCチェスト情報の保存');
+          failAlert('FC情報の保存');
         });
     })
     .catch(() => {
-      failAlert('FC情報の保存');
+      failAlert('FCチェスト情報の取得');
     });
 }
