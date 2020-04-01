@@ -25,21 +25,59 @@ function getCrystalAmount(node: Element | null): number {
   return num;
 }
 
-export function loadBaggageItems(): InventoryItem[] {
+function allLoaded(indexes: string[]): boolean {
+  const notFound = indexes.filter((idx) => {
+    const tab = document.querySelector('div.sys_chest_list_' + idx);
+    return !tab;
+  });
+  return notFound.length === 0;
+}
+
+function getAllPages(): Promise<NodeListOf<Element>> {
+  const tabItems = document.querySelectorAll('li.tab__chest--list');
+  return new Promise<NodeListOf<Element>>((resolve, reject) => {
+    const indexes: string[] = [];
+    for (let i = 0; i < tabItems.length; i++) {
+      const button = tabItems[i];
+      const link = button.querySelector('a.sys_chest_tab');
+      if (!link) continue;
+      const tabIdx = (link as HTMLElement).dataset.chest_tab;
+      if (!tabIdx) continue;
+      indexes.push(tabIdx);
+      (link as HTMLElement).click();
+    }
+    if (indexes.length === 0) {
+      resolve(document.querySelectorAll('li.item-list__list'));
+      return;
+    }
+    let timeout = 1500;
+    const id = setInterval(() => {
+      timeout -= 100;
+      if (timeout <= 0) {
+        clearInterval(id);
+        reject();
+      } else if (allLoaded(indexes)) {
+        clearInterval(id);
+        resolve(document.querySelectorAll('li.item-list__list'));
+      }
+    }, 100);
+  });
+}
+
+function doLoadBaggageItems(baggages: NodeListOf<Element>): InventoryItem[] {
   const items: InventoryItem[] = [];
-  // items
-  const baggage = document.querySelectorAll('li.item-list__list');
-  baggage.forEach((e) => {
+  for (let idx = 0; idx < baggages.length; idx++) {
+    const e = baggages[idx];
     const nameH4 = e.getElementsByTagName('h4');
-    if (nameH4.length !== 1) return;
+    if (nameH4.length !== 1) continue;
     const link = nameH4[0].getElementsByTagName('a');
-    if (link.length <= 1) return;
+    if (link.length <= 1) continue;
     const name = link[0].innerText || '';
-    if (name.length === 0) return;
+    if (name.length === 0) continue;
     const num = e.getElementsByClassName('item-list__number');
-    if (num.length !== 1) return;
+    if (num.length !== 1) continue;
     const i = parseInt((num[0] as HTMLElement).innerText, 10);
-    if (isNaN(i)) return;
+    if (isNaN(i)) continue;
     const icon = e.getElementsByClassName('ic_item_quality');
     let HQ = false;
     let collectable = false;
@@ -49,7 +87,7 @@ export function loadBaggageItems(): InventoryItem[] {
       else collectable = true;
     }
     items.push({ name, number: i, HQ, collectable });
-  });
+  }
   // crystals
   const crystalTable = document.querySelector('div.table__crystal table');
   if (!crystalTable) return items;
@@ -78,4 +116,14 @@ export function loadBaggageItems(): InventoryItem[] {
     }
   }
   return items;
+}
+
+export function loadBaggageItems(): Promise<InventoryItem[]> {
+  return new Promise<InventoryItem[]>((resolve, reject) => {
+    getAllPages()
+      .then((baggages) => {
+        resolve(doLoadBaggageItems(baggages));
+      })
+      .catch(reject);
+  });
 }
