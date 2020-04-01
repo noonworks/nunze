@@ -60,6 +60,13 @@ export function sendSearchInventoryRequest(tab: chrome.tabs.Tab): void {
 }
 
 //
+// load shop info on page
+//
+export function loadShopRequest(tabId: number): void {
+  sendToContent(tabId, { method: 'Nunze_LoadShop' });
+}
+
+//
 // load inventory on page
 //
 export function loadInventoryRequest(tabId: number): void {

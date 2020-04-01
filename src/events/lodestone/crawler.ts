@@ -1,25 +1,33 @@
 import { Inventory } from './inventory/Inventory';
 import { InventoryData } from './inventory/data';
 import { CharacterStorageDataData } from './character/data';
-import { loadInventoryRequest } from '../requests';
+import { loadInventoryRequest, loadShopRequest } from '../requests';
 
 interface CrawlQueue {
   characterId: string;
   retainerId: string;
+  target: 'baggage' | 'shop';
 }
 
 let _crawlQueue: CrawlQueue[] = [];
+type WaitTabFunction = (tab?: chrome.tabs.Tab) => void;
+type sendTabRequestFunction = (tabId: number) => void;
 
-function waitTabToCrawl(tab?: chrome.tabs.Tab): void {
-  if (!tab || typeof tab.id !== 'number') return;
-  const tabId = tab.id;
-  if (tab.status == 'complete') {
-    loadInventoryRequest(tabId);
-  } else {
-    setTimeout(() => {
-      chrome.tabs.get(tabId, waitTabToCrawl);
-    }, 200);
-  }
+function createWaitTabFunction(
+  onComplete: sendTabRequestFunction
+): WaitTabFunction {
+  const func = (tab?: chrome.tabs.Tab): void => {
+    if (!tab || typeof tab.id !== 'number') return;
+    const tabId = tab.id;
+    if (tab.status == 'complete') {
+      onComplete(tabId);
+    } else {
+      setTimeout(() => {
+        chrome.tabs.get(tabId, func);
+      }, 200);
+    }
+  };
+  return func;
 }
 
 function goNextRetainer(tabId: number | undefined): void {
@@ -28,9 +36,16 @@ function goNextRetainer(tabId: number | undefined): void {
     'http://jp.finalfantasyxiv.com/lodestone/character/' +
     _crawlQueue[0].characterId +
     '/retainer/' +
-    _crawlQueue[0].retainerId +
-    '/baggage/';
-  chrome.tabs.update(tabId, { url: url }, waitTabToCrawl);
+    _crawlQueue[0].retainerId;
+  if (_crawlQueue[0].target === 'shop') {
+    chrome.tabs.update(tabId, { url }, createWaitTabFunction(loadShopRequest));
+  } else {
+    chrome.tabs.update(
+      tabId,
+      { url: url + '/baggage/' },
+      createWaitTabFunction(loadInventoryRequest)
+    );
+  }
 }
 
 export function startRetainerCrawler(
@@ -43,6 +58,12 @@ export function startRetainerCrawler(
     _crawlQueue.push({
       characterId: character.id,
       retainerId: retainerIds[i],
+      target: 'shop',
+    });
+    _crawlQueue.push({
+      characterId: character.id,
+      retainerId: retainerIds[i],
+      target: 'baggage',
     });
   }
   if (!_crawlQueue || _crawlQueue.length == 0) return;
