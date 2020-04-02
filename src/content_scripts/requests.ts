@@ -16,7 +16,7 @@ import {
 //
 // send message to event script
 //
-const sendToContent: (
+const sendToEvent: (
   message: ContentToEventMessage,
   callback?: MessageCallBack
 ) => void = _sendMessage;
@@ -25,7 +25,7 @@ const sendToContent: (
 //
 //
 export function sendUpdateSearchMenu(name: string): void {
-  sendToContent({ method: 'Nunze_updateSearchMenu', name });
+  sendToEvent({ method: 'Nunze_updateSearchMenu', name });
 }
 
 //
@@ -33,7 +33,7 @@ export function sendUpdateSearchMenu(name: string): void {
 //
 export function sendSaveFreeCompanyRequest(fc: SavedFC): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    sendToContent({ method: 'Nunze_saveFreeCompany', fc }, (response) => {
+    sendToEvent({ method: 'Nunze_saveFreeCompany', fc }, (response) => {
       if (
         !response ||
         !isSaveFreeCompanyResponse(response) ||
@@ -51,7 +51,7 @@ export function sendSaveFreeCompanyRequest(fc: SavedFC): Promise<void> {
 export function sendStartRetainerCrawlerRequest(
   character: CharacterStorageDataData
 ): void {
-  sendToContent({ method: 'Nunze_startRetainerCrawler', character });
+  sendToEvent({ method: 'Nunze_startRetainerCrawler', character });
 }
 
 //
@@ -61,18 +61,15 @@ export function sendSaveCharactersRequest(
   characters: CharacterStorageDataData[]
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    sendToContent(
-      { method: 'Nunze_saveCharacters', characters },
-      (response) => {
-        if (
-          !response ||
-          !isSaveCharactersResponse(response) ||
-          !response.succeed
-        ) {
-          reject();
-        } else resolve();
-      }
-    );
+    sendToEvent({ method: 'Nunze_saveCharacters', characters }, (response) => {
+      if (
+        !response ||
+        !isSaveCharactersResponse(response) ||
+        !response.succeed
+      ) {
+        reject();
+      } else resolve();
+    });
   });
 }
 
@@ -84,7 +81,7 @@ export function sendSaveInventoriesRequest(
   inCrawling: boolean
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    sendToContent(
+    sendToEvent(
       {
         method: 'Nunze_saveInventories',
         inventories,
@@ -110,7 +107,7 @@ export function sendSaveInventoriesRequest(
 //
 export function sendGetOptionRequest(): Promise<GetOptionResponse> {
   return new Promise<GetOptionResponse>((resolve, reject) => {
-    sendToContent({ method: 'Nunze_getOption' }, (response) => {
+    sendToEvent({ method: 'Nunze_getOption' }, (response) => {
       if (!response || !isGetOptionResponse(response)) reject();
       else resolve(response);
     });
