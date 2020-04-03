@@ -4,6 +4,7 @@ import { OptionStorage } from './option/storage';
 import {
   startRetainerCrawler,
   saveInventoriesInCrawling,
+  saveLogsInCrawling,
 } from './lodestone/crawler';
 import { CharacterStore } from './lodestone/character/character';
 import { Inventory } from './lodestone/inventory/Inventory';
@@ -54,6 +55,12 @@ function onMessage(
         Inventory.instance().save(message.inventories);
         sendResponse({ method: 'Nunze_saveInventories', status: 'completed' });
       }
+      break;
+    case 'Nunze_saveLogs':
+      sendResponse({
+        method: 'Nunze_saveLogs',
+        succeed: saveLogsInCrawling(message.items),
+      });
       break;
     case 'Nunze_deleteLodestoneData':
       Inventory.instance().removeAll();
