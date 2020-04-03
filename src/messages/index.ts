@@ -26,6 +26,7 @@ import {
   UpdateSearchMenuResponse,
 } from './messages/UpdateSearchMenu';
 import { ShowInventorySearchResultMessage } from './messages/ShowInventorySearchResult';
+import { LoadShopMessage } from './messages/LoadShop';
 
 type Messages =
   | GetOptionMessage
@@ -35,6 +36,7 @@ type Messages =
   | GetSelectionMessage
   | CopySelectionMessage
   | LoadInventoryMessage
+  | LoadShopMessage
   | SaveInventoriesMessage
   | SaveCharactersMessage
   | StartRetainerCrawlersMessage
