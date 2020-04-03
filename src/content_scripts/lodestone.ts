@@ -63,7 +63,7 @@ function loadShop(): void {
         items: shop.shopItems.map((i) => {
           return {
             name: i.name,
-            number: i.num,
+            number: i.number,
             HQ: i.HQ,
             collectable: false,
           };
