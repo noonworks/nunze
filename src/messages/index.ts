@@ -27,6 +27,7 @@ import {
 } from './messages/UpdateSearchMenu';
 import { ShowInventorySearchResultMessage } from './messages/ShowInventorySearchResult';
 import { LoadShopMessage } from './messages/LoadShop';
+import { SaveLogsMessage } from './messages/SaveLogsMessage';
 
 type Messages =
   | GetOptionMessage
@@ -38,6 +39,7 @@ type Messages =
   | LoadInventoryMessage
   | LoadShopMessage
   | SaveInventoriesMessage
+  | SaveLogsMessage
   | SaveCharactersMessage
   | StartRetainerCrawlersMessage
   | SaveFreeCompanyMessage
