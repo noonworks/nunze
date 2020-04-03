@@ -2,6 +2,8 @@ import { Inventory } from './inventory/Inventory';
 import { InventoryData } from './inventory/data';
 import { CharacterStorageDataData } from './character/data';
 import { loadInventoryRequest, loadShopRequest } from '../requests';
+import { LogData } from './log/data';
+import { LogStore } from './log/log';
 
 interface CrawlQueue {
   characterId: string;
@@ -101,4 +103,14 @@ export function saveInventoriesInCrawling(
   if (!_crawlQueue || _crawlQueue.length == 0) return 'completed';
   goNextRetainer(tab.id);
   return 'next';
+}
+
+export function saveLogsInCrawling(items: LogData[]): boolean {
+  try {
+    LogStore.instance().save(items);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 }

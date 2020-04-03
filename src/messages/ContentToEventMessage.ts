@@ -23,10 +23,12 @@ import {
   SaveOptionDataMessage,
   SaveOptionDataResponse,
 } from './messages/SaveOptionData';
+import { SaveLogsMessage, SaveLogsResponse } from './messages/SaveLogsMessage';
 
 type LodestoneToEventMessages =
   | GetOptionMessage
   | SaveInventoriesMessage
+  | SaveLogsMessage
   | SaveCharactersMessage
   | StartRetainerCrawlersMessage
   | SaveFreeCompanyMessage;
@@ -34,6 +36,7 @@ type LodestoneToEventMessages =
 type LodestoneToEventResponses =
   | GetOptionResponse
   | SaveInventoriesResponse
+  | SaveLogsResponse
   | SaveCharactersResponse
   | SaveFreeCompanyResponse;
 

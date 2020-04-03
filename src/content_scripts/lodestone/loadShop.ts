@@ -1,7 +1,7 @@
 export interface LogItem {
   name: string;
   HQ: boolean;
-  num: number;
+  number: number;
   price: number;
   customer: string;
   dateTime: number;
@@ -10,7 +10,7 @@ export interface LogItem {
 export interface ShopItem {
   name: string;
   HQ: boolean;
-  num: number;
+  number: number;
   price: number;
   total: number;
 }
@@ -41,16 +41,16 @@ const NUMBER_REGEX = /(.*)\(([0-9]+)\)/;
 const HQ_REGEX = /^([^]+)(?)$/;
 function getNames(
   itemP: HTMLElement
-): { name: string; num: number; HQ: boolean } | null {
+): { name: string; number: number; HQ: boolean } | null {
   const item = strip(itemP.textContent);
   const m = item.match(NUMBER_REGEX);
   if (!m) return null;
-  const num = toInt(m[2]);
-  if (num < 0) return null;
+  const number = toInt(m[2]);
+  if (number < 0) return null;
   const m2 = m[1].match(HQ_REGEX);
   if (!m2) return null;
   const HQ = m2[2].length > 0;
-  return { name: m2[1], num, HQ };
+  return { name: m2[1], number, HQ };
 }
 
 function getLogDateTime(div: HTMLElement): number {
@@ -98,11 +98,11 @@ function getShopItem(li: HTMLElement): ShopItem | null {
   const priceStr = strip(div[1].textContent);
   const price = toInt(priceStr);
   const numStr = strip(div[2].textContent);
-  const num = toInt(numStr);
+  const number = toInt(numStr);
   const totalStr = strip(div[1].textContent);
   const total = toInt(totalStr);
-  if (price < 0 || num < 0 || total < 0) return null;
-  return { ...itemName, price, num, total };
+  if (price < 0 || number < 0 || total < 0) return null;
+  return { ...itemName, price, number, total };
 }
 
 function loadLog(div: HTMLElement): LogItem[] {
