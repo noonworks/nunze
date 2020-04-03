@@ -89,6 +89,20 @@ function buildCountSummary(counts: ItemCount, totalCounts?: ItemCount): string {
   return ' ( ' + cnt.join(' / ') + ' )';
 }
 
+function getRetainerName(
+  rId: string,
+  character: CharacterStorageDataData
+): string {
+  const r = character.retainers[rId];
+  if (!r) {
+    const rId2 = rId.replace(/_shop$/, '');
+    const r2 = character.retainers[rId2];
+    if (!r2) return '';
+    return r2.name + '(出品)';
+  }
+  return r.name;
+}
+
 function toInspireTreeNode(summary: Summary, data: ResultData): NodeConfig {
   const node: NodeConfig = {
     text: summary.name + buildCountSummary(summary.total),
@@ -106,11 +120,11 @@ function toInspireTreeNode(summary: Summary, data: ResultData): NodeConfig {
     };
     for (let ri = 0; ri < summary.characters[cId].retainerIds.length; ri++) {
       const rId = summary.characters[cId].retainerIds[ri];
-      const retainer = character.retainers[rId];
+      const retainerName = getRetainerName(rId, character);
       const world = character.world;
       const retNode: NodeConfig = {
         text:
-          retainer.name +
+          retainerName +
           shortenWorld(world) +
           buildCountSummary(
             summary.characters[cId].retainers[rId].total,
