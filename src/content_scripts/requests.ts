@@ -12,6 +12,8 @@ import {
   isSaveFreeCompanyResponse,
   SavedFC,
 } from '../messages/messages/SaveFreeCompany';
+import { isSaveLogsResponse } from '../messages/messages/SaveLogsMessage';
+import { LogData } from '../events/lodestone/log/data';
 
 //
 // send message to event script
@@ -99,6 +101,19 @@ export function sendSaveInventoriesRequest(
         }
       }
     );
+  });
+}
+
+//
+// send save log items request
+//
+export function sendSaveLogsRequest(items: LogData[]): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    sendToEvent({ method: 'Nunze_saveLogs', items }, (response) => {
+      if (!response || !isSaveLogsResponse(response) || !response.succeed) {
+        reject();
+      } else resolve();
+    });
   });
 }
 

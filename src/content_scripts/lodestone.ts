@@ -2,7 +2,11 @@ import { loadBaggageItems } from './lodestone/loadBaggageItems';
 import { loadMetadata } from './lodestone/loadMetadata';
 import { initMenu } from './lodestone/menu';
 import { failAlert } from './lodestone/util';
-import { sendSaveInventoriesRequest, sendGetOptionRequest } from './requests';
+import {
+  sendSaveInventoriesRequest,
+  sendGetOptionRequest,
+  sendSaveLogsRequest,
+} from './requests';
 import { EventToContentMessage } from '../messages/EventToContentMessages';
 import { loadShopItems } from './lodestone/loadShop';
 
@@ -53,27 +57,31 @@ function loadShop(): void {
     reject();
     return;
   }
+  const base = {
+    characterId: m[1],
+    retainerId: m[2],
+    loadDateTime: new Date().getTime(),
+  };
   const shop = loadShopItems();
-  sendSaveInventoriesRequest(
-    [
-      {
-        characterId: m[1],
-        retainerId: m[2] + '_shop',
-        loadDateTime: new Date().getTime(),
-        items: shop.shopItems.map((i) => {
-          return {
-            name: i.name,
-            number: i.number,
-            HQ: i.HQ,
-            collectable: false,
-          };
-        }),
-      },
-    ],
-    true
-  )
+  const inv = {
+    ...base,
+    retainerId: base.retainerId + '_shop',
+    items: shop.shopItems.map((i) => {
+      return {
+        name: i.name,
+        number: i.number,
+        HQ: i.HQ,
+        collectable: false,
+      };
+    }),
+  };
+  sendSaveLogsRequest([{ ...base, items: shop.shopLogs }])
     .then(() => {
-      alert('[Nunze]リテイナー販売品情報を保存しました。');
+      sendSaveInventoriesRequest([inv], true)
+        .then(() => {
+          alert('[Nunze]リテイナー販売品情報を保存しました。');
+        })
+        .catch(reject);
     })
     .catch(reject);
 }
