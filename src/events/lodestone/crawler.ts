@@ -71,7 +71,7 @@ export function startRetainerCrawler(
   goNextRetainer(tab.id);
 }
 
-const REGEX_BAGGAGE = /character\/([0-9a-z]+)\/retainer\/([0-9a-z]+)\/baggage/;
+const REGEX_BAGGAGE = /character\/([0-9a-z]+)\/retainer\/([0-9a-z]+)/;
 function isValidUrl(
   url: string,
   characterId: string,
@@ -79,7 +79,8 @@ function isValidUrl(
 ): boolean {
   const m = url.match(REGEX_BAGGAGE);
   if (!m) return false;
-  return characterId == m[1] && retainerId == m[2];
+  if (characterId !== m[1]) return false;
+  return retainerId.indexOf(m[2]) === 0;
 }
 
 type CrawlResult = 'fail' | 'completed' | 'next';
