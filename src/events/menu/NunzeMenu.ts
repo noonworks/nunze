@@ -47,6 +47,11 @@ const DEFAULT_MENU: { [key: string]: MenuItemOption } = {
     title: '設定...',
     parentId: ROOT_NODE_ID,
   },
+  OpenShopLog: {
+    id: 'OP-shopLog',
+    title: '販売履歴...',
+    parentId: ROOT_NODE_ID,
+  },
 };
 
 type MenuItemTuple = [string, MenuItem];
@@ -126,6 +131,8 @@ function buildNodes(
   if (sites.length > 0) nodes.push(DEFAULT_MENU_ITEMS.SearchSeparator);
   // Open lodestone
   if (opt.data.lodestone.use) nodes.push(DEFAULT_MENU_ITEMS.OpenLodestone);
+  // Open shop log
+  if (opt.data.lodestone.use) nodes.push(DEFAULT_MENU_ITEMS.OpenShopLog);
   // Open options
   nodes.push(DEFAULT_MENU_ITEMS.OpenOption);
   return nodes;

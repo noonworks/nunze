@@ -22,6 +22,11 @@ function onMenuClick(
         url: 'http://jp.finalfantasyxiv.com/lodestone/',
       });
       return;
+    case 'OP-shopLog':
+      chrome.tabs.create({
+        url: chrome.runtime.getURL('pages/shop_log.html'),
+      });
+      return;
     case 'OP-options':
       chrome.tabs.create({ url: 'options.html' });
       return;
