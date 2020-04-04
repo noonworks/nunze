@@ -46,12 +46,17 @@
   "options_page": "options.html",
 
   "sandbox": {
-    "pages": ["options.html", "pages/retainer_search_result.html"]
+    "pages": [
+      "options.html",
+      "pages/retainer_search_result.html",
+      "pages/show_log.html"
+    ]
   },
 
   "web_accessible_resources": [
     "options_sub.html",
-    "pages/retainer_search_result.html"
+    "pages/retainer_search_result.html",
+    "pages/show_log_sub.html"
   ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"

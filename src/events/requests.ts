@@ -60,6 +60,18 @@ export function sendSearchInventoryRequest(tab: chrome.tabs.Tab): void {
 }
 
 //
+// Show shop log
+//
+export function sendShowShopLogRequest(tab: chrome.tabs.Tab): void {
+  const opt = OptionStorage.instance().load();
+  if (!opt.data.lodestone.use) return;
+  if (typeof tab.id !== 'number') return;
+  chrome.tabs.create({
+    url: chrome.runtime.getURL('pages/shop_log.html'),
+  });
+}
+
+//
 // load shop info on page
 //
 export function loadShopRequest(tabId: number): void {

@@ -3,6 +3,7 @@ import {
   sendSearchWithSiteRequest,
   sendCopyRequest,
   sendSearchInventoryRequest,
+  sendShowShopLogRequest,
 } from '../requests';
 
 function onMenuClick(
@@ -21,6 +22,9 @@ function onMenuClick(
       chrome.tabs.create({
         url: 'http://jp.finalfantasyxiv.com/lodestone/',
       });
+      return;
+    case 'OP-shopLog':
+      if (tab) sendShowShopLogRequest(tab);
       return;
     case 'OP-options':
       chrome.tabs.create({ url: 'options.html' });

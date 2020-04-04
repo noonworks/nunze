@@ -17,12 +17,62 @@ import {
   SubToEventResponses,
 } from '../messages/SubToEventMessages';
 import { Version2 } from './option/version2';
+import {
+  ShopLogToEventMessages,
+  ShopLogToEventResponses,
+} from '../messages/ShopLogToEventMessages';
+import { LogStore } from './lodestone/log/log';
+import { RowItem } from '../pages/shopLog/common';
+
+function toDateTimeString(dt: number): string {
+  const d = new Date(dt);
+  return (
+    '' +
+    d.getFullYear() +
+    '-' +
+    ('0' + (d.getMonth() + 1)).slice(-2) +
+    '-' +
+    ('0' + d.getDate()).slice(-2) +
+    ' ' +
+    ('0' + d.getHours()).slice(-2) +
+    ':' +
+    ('0' + d.getMinutes()).slice(-2)
+  );
+}
+
+function makeRowItems(): RowItem[] {
+  const logs = LogStore.instance().loadAll();
+  const characters = CharacterStore.instance().load().data;
+  const ret: RowItem[] = [];
+  for (let i = 0; i < logs.length; i++) {
+    const log = logs[i];
+    const c = characters[log.characterId];
+    const cIds = Object.keys(characters);
+    const cIndex = cIds.indexOf(log.characterId);
+    if (!c || cIndex < 0) continue;
+    const r = c.retainers[log.retainerId];
+    for (let j = 0; j < log.items.length; j++) {
+      ret.push({
+        id: cIndex * 1000 + i * 100 + j,
+        name: log.items[j].name,
+        retainer: r.name,
+        price: log.items[j].price,
+        customer: log.items[j].customer,
+        dateTime: toDateTimeString(log.items[j].dateTime),
+      });
+    }
+  }
+  return ret;
+}
 
 type ResponseSenders = (
-  response: ContentToEventResponse | SubToEventResponses
+  response:
+    | ContentToEventResponse
+    | SubToEventResponses
+    | ShopLogToEventResponses
 ) => void;
 function onMessage(
-  message: ContentToEventMessage | SubToEventMessages,
+  message: ContentToEventMessage | SubToEventMessages | ShopLogToEventMessages,
   sender: chrome.runtime.MessageSender,
   sendResponse: ResponseSenders
 ): boolean {
@@ -71,6 +121,12 @@ function onMessage(
       sendResponse({
         method: 'Nunze_resetOption',
         opt: OptionStorage.instance().reset() as Version2,
+      });
+      break;
+    case 'Nunze_getShopLogs':
+      sendResponse({
+        method: 'Nunze_getShopLogs',
+        items: makeRowItems(),
       });
       break;
     //
