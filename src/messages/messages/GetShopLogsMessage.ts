@@ -1,4 +1,4 @@
-import { LogItem } from '../../content_scripts/lodestone/loadShop';
+import { RowItem } from '../../pages/shopLog/common';
 
 export interface GetShopLogsMessage {
   method: 'Nunze_getShopLogs';
@@ -6,7 +6,7 @@ export interface GetShopLogsMessage {
 
 export interface GetShopLogsResponse {
   method: 'Nunze_getShopLogs';
-  items: LogItem[];
+  items: RowItem[];
 }
 
 export function isGetShopLogsResponse(

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //
 // send message to background script
 //
-const sendBackground: (
+const sendToEvent: (
   message: GetShopLogsMessage,
   callback?: MessageCallBack
 ) => void = _sendMessage;
@@ -38,7 +38,7 @@ window.addEventListener(
     const msg = splitData(message.data) as MainToSubMessages;
     switch (msg.method) {
       case 'Nunze_SL_FIRST_LOAD':
-        sendBackground({ method: 'Nunze_getShopLogs' }, (response) => {
+        sendToEvent({ method: 'Nunze_getShopLogs' }, (response) => {
           if (!response || !isGetShopLogsResponse(response)) return;
           sendParent({
             method: 'Nunze_SL_SUB_FIRST_LOADED',
