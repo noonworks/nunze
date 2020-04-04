@@ -22,6 +22,8 @@ const config: ConfigurationFactory = () => {
         __dirname,
         'src/pages/search_result.ts'
       ),
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      shop_log: path.join(__dirname, 'src/pages/shop_log.ts'),
     },
     output: {
       path: path.join(__dirname, 'dist/js'),

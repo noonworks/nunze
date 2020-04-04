@@ -3,6 +3,7 @@ import {
   sendSearchWithSiteRequest,
   sendCopyRequest,
   sendSearchInventoryRequest,
+  sendShowShopLogRequest,
 } from '../requests';
 
 function onMenuClick(
@@ -23,9 +24,7 @@ function onMenuClick(
       });
       return;
     case 'OP-shopLog':
-      chrome.tabs.create({
-        url: chrome.runtime.getURL('pages/shop_log.html'),
-      });
+      if (tab) sendShowShopLogRequest(tab);
       return;
     case 'OP-options':
       chrome.tabs.create({ url: 'options.html' });
