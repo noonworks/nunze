@@ -80,6 +80,7 @@
   },
   "dependencies": {
     "inspire-tree": "^6.0.1",
-    "inspire-tree-dom": "^4.0.6"
+    "inspire-tree-dom": "^4.0.6",
+    "vue-good-table": "^2.19.1"
   }
 }
