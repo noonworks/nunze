@@ -1,5 +1,6 @@
-function init(): void {
-  console.log('init');
-}
+import { mountVue } from './shopLog/common';
+import App from './shopLog/app.vue';
 
-window.addEventListener('load', init);
+document.addEventListener('DOMContentLoaded', () => {
+  mountVue(new App());
+});
