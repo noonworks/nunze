@@ -28,6 +28,10 @@ import {
 import { ShowInventorySearchResultMessage } from './messages/ShowInventorySearchResult';
 import { LoadShopMessage } from './messages/LoadShop';
 import { SaveLogsMessage } from './messages/SaveLogsMessage';
+import {
+  GetShopLogsMessage,
+  GetShopLogsResponse,
+} from './messages/GetShopLogsMessage';
 
 type Messages =
   | GetOptionMessage
@@ -44,7 +48,8 @@ type Messages =
   | StartRetainerCrawlersMessage
   | SaveFreeCompanyMessage
   | UpdateSearchMenuMessage
-  | ShowInventorySearchResultMessage;
+  | ShowInventorySearchResultMessage
+  | GetShopLogsMessage;
 
 type Responses =
   | GetOptionResponse
@@ -52,7 +57,8 @@ type Responses =
   | DeleteLodestoneDataResponse
   | GetSelectionResponse
   | CopySelectionResponse
-  | UpdateSearchMenuResponse;
+  | UpdateSearchMenuResponse
+  | GetShopLogsResponse;
 
 export type MessageCallBack = (response: Responses) => void;
 
