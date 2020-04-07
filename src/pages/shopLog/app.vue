@@ -8,9 +8,14 @@
           v-model="dt"
           format="YYYY-MM-DD HH:mm"
           label="フィルターする日時"
+          @input="onInputFilterDateTime"
         />
       </div>
-      <select :class="$style.beforeafter">
+      <select
+        :class="$style.beforeafter"
+        v-model="beforeafter"
+        @change="onInputFilterDateTime"
+      >
         <option value="before">以前</option>
         <option value="after">以後</option>
       </select>
@@ -157,21 +162,31 @@ const DEFAULT_COLUMNS: Label[] = [
   { label: '購入者', field: 'customer' },
 ];
 
+type BeforeOrAfter = 'before' | 'after';
+
 @Component({ components: { VueGoodTable, VueCtkDateTimePicker } })
 export default class App extends Vue implements RowApp {
   private items: RowItem[] = [];
+  private filteredItems: RowItem[] = [];
+  private preFiltered = false;
+  private preDt: string | null = null;
+  private preBA: BeforeOrAfter = 'before';
+  public filtered = false;
   public dt: string | null = null;
+  public beforeafter: BeforeOrAfter = 'before';
 
   public get columns(): Label[] {
     return DEFAULT_COLUMNS;
   }
 
   public get rows(): RowItem[] {
-    return this.items;
+    if (this.filteredItems.length === 0) this.doFilter();
+    return this.filteredItems;
   }
 
   public set rows(items: RowItem[]) {
     this.items = items;
+    this.doFilter();
   }
 
   public separateNum(val: number): string {
@@ -194,6 +209,36 @@ export default class App extends Vue implements RowApp {
   public formatTime(val: number): string {
     const dt = new Date(val);
     return '' + dt.getHours() + ':' + ('0' + dt.getMinutes()).slice(-2);
+  }
+
+  public onInputFilterDateTime(value: string | null): void {
+    const filtered = typeof this.dt === 'string';
+    if (
+      this.preFiltered === filtered &&
+      this.preDt === this.dt &&
+      this.preBA === this.beforeafter
+    )
+      return;
+    this.doFilter();
+  }
+
+  private doFilter(): void {
+    const filtered = typeof this.dt === 'string';
+    let dtNum = -1;
+    if (typeof this.dt === 'string') dtNum = new Date(this.dt).getTime();
+    this.filteredItems = this.items.filter((i) => {
+      if (!filtered) return true;
+      if (this.beforeafter === 'after') {
+        return i.dateTime >= dtNum;
+      } else if (this.beforeafter === 'before') {
+        return i.dateTime <= dtNum;
+      }
+      return false;
+    });
+    console.log(this.filteredItems);
+    this.preFiltered = filtered;
+    this.preBA = this.beforeafter;
+    this.preDt = this.dt;
   }
 }
 </script>
