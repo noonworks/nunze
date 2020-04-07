@@ -1,6 +1,20 @@
 <template>
   <div>
     <h2>販売履歴</h2>
+    <fieldset :class="$style.filter">
+      <legend>日時フィルター</legend>
+      <div :class="$style.datetime">
+        <VueCtkDateTimePicker
+          v-model="dt"
+          format="YYYY-MM-DD HH:mm"
+          label="フィルターする日時"
+        />
+      </div>
+      <select :class="$style.beforeafter">
+        <option value="before">以前</option>
+        <option value="after">以後</option>
+      </select>
+    </fieldset>
     <vue-good-table
       :columns="columns"
       :rows="rows"
@@ -52,23 +66,42 @@
       </template>
       <div slot="emptystate">
         <p>販売履歴が見つかりませんでした。</p>
-        <p>
-          リテイナー情報が古くなっている可能性があります。
-          <a href="http://jp.finalfantasyxiv.com/lodestone/" target="blank"
-            >LodeStone</a
-          >
-          で情報読み取りを行って、再度試してみてください。
-        </p>
+        <ol>
+          <li>画面を更新してみてください。</li>
+          <li>
+            リテイナー情報が古くなっている可能性があります。
+            <a href="http://jp.finalfantasyxiv.com/lodestone/" target="blank"
+              >LodeStone</a
+            >
+            で情報読み取りを行って、再度試してみてください。
+          </li>
+        </ol>
       </div>
     </vue-good-table>
   </div>
 </template>
 
 <style module>
+.filter {
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin-bottom: 1em;
+  width: 420px;
+  text-align: center;
+  margin: 1em auto;
+}
+.datetime {
+  width: 300px;
+  display: inline-block;
+}
+.beforeafter {
+  outline: none;
+  padding: 0.5em;
+  margin-left: 0.5em;
+}
 table.vgttable tbody td {
   vertical-align: middle;
 }
-
 .character,
 .world {
   font-size: 0.7em;
@@ -76,7 +109,6 @@ table.vgttable tbody td {
   line-height: 100%;
   margin-top: 2px;
 }
-
 .date,
 .time {
   display: block;
@@ -86,6 +118,7 @@ table.vgttable tbody td {
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { VueGoodTable } from 'vue-good-table';
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 import { RowItem, RowApp, RowRetainer } from './common';
 import { buildCharacterUrl, buildRetainerUrl } from '../../master/util';
 
@@ -124,9 +157,10 @@ const DEFAULT_COLUMNS: Label[] = [
   { label: '購入者', field: 'customer' },
 ];
 
-@Component({ components: { VueGoodTable } })
+@Component({ components: { VueGoodTable, VueCtkDateTimePicker } })
 export default class App extends Vue implements RowApp {
   private items: RowItem[] = [];
+  public dt: string | null = null;
 
   public get columns(): Label[] {
     return DEFAULT_COLUMNS;
