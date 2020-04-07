@@ -4,13 +4,19 @@ import {
   InvalidMessage,
 } from './messages';
 
+export interface RowRetainer {
+  retainer: { id: string; name: string };
+  character: { id: string; name: string; world: string };
+}
+
 export interface RowItem {
   id: number;
+  retainer: RowRetainer;
   name: string;
-  retainer: string;
-  price: number;
+  num: number;
+  total: number;
   customer: string;
-  dateTime: string;
+  dateTime: number;
 }
 
 export interface RowApp extends Vue {
