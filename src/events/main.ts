@@ -24,22 +24,6 @@ import {
 import { LogStore } from './lodestone/log/log';
 import { RowItem } from '../pages/shopLog/common';
 
-function toDateTimeString(dt: number): string {
-  const d = new Date(dt);
-  return (
-    '' +
-    d.getFullYear() +
-    '-' +
-    ('0' + (d.getMonth() + 1)).slice(-2) +
-    '-' +
-    ('0' + d.getDate()).slice(-2) +
-    ' ' +
-    ('0' + d.getHours()).slice(-2) +
-    ':' +
-    ('0' + d.getMinutes()).slice(-2)
-  );
-}
-
 function makeRowItems(): RowItem[] {
   const logs = LogStore.instance().loadAll();
   const characters = CharacterStore.instance().load().data;
@@ -51,14 +35,16 @@ function makeRowItems(): RowItem[] {
     const cIndex = cIds.indexOf(log.characterId);
     if (!c || cIndex < 0) continue;
     const r = c.retainers[log.retainerId];
+    const retainer = { retainer: r, character: c };
     for (let j = 0; j < log.items.length; j++) {
       ret.push({
         id: cIndex * 1000 + i * 100 + j,
+        retainer,
         name: log.items[j].name,
-        retainer: r.name,
-        price: log.items[j].price,
+        num: log.items[j].number,
+        total: log.items[j].price,
         customer: log.items[j].customer,
-        dateTime: toDateTimeString(log.items[j].dateTime),
+        dateTime: log.items[j].dateTime,
       });
     }
   }
