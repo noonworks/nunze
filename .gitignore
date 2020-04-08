@@ -1,3 +1,4 @@
 /node_modules/
 /dist/
 *.code-workspace
+/archive/nunze-*.zip
