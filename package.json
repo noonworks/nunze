@@ -81,7 +81,6 @@
   "dependencies": {
     "inspire-tree": "^6.0.1",
     "inspire-tree-dom": "^4.0.6",
-    "vue-ctk-date-time-picker": "^2.4.0",
     "vue-good-table": "^2.19.1"
   }
 }

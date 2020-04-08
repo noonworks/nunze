@@ -63,6 +63,12 @@ const config: ConfigurationFactory = () => {
     },
     resolve: {
       extensions: ['.ts', '.js', '.vue'],
+      alias: {
+        'vue-ctk-date-time-picker': path.resolve(
+          __dirname,
+          'lib/vue-ctk-date-time-picker'
+        ),
+      },
     },
     plugins: [new VueLoaderPlugin()],
     optimization: {

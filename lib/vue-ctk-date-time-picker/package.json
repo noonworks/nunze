@@ -1,0 +1,8 @@
+{
+  "name": "vue-ctk-date-time-picker",
+  "version": "2.4.0",
+  "author": "Louis Mazel <loic.mazuel@chronotruck.com>",
+  "license": "MIT",
+  "main": "dist/vue-ctk-date-time-picker.common.js",
+  "type": "dist/index.d.ts"
+}

@@ -8,6 +8,10 @@
     "sourceMap": false,
     "strict": true,
     "experimentalDecorators": true,
-    "types": ["@types/node", "@types/jest", "@types/chrome"]
+    "types": ["@types/node", "@types/jest", "@types/chrome"],
+    "baseUrl": "./",
+    "paths": {
+      "vue-ctk-date-time-picker": ["lib/vue-ctk-date-time-picker"]
+    }
   }
 }
